@@ -4,6 +4,21 @@
 <meta name="theme-color" content="{{ theme.android_chrome_color }}">
 
 
+<script>
+    (function () {
+        if ('{{ page.password }}') {
+            if (prompt('请输入文章密码') !== '{{ page.password }}') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("http://purice93.github.io"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+
 {% if theme.pace %}
   {% set pace_css_uri = url_for(theme.vendors._internal + '/pace/'+ theme.pace_theme +'.min.css?v=1.0.2') %}
   {% set pace_js_uri = url_for(theme.vendors._internal + '/pace/pace.min.js?v=1.0.2') %}
@@ -35,6 +50,7 @@
 {% if theme.google_site_verification %}
   <meta name="google-site-verification" content="{{ theme.google_site_verification }}" />
 {% endif %}
+
 
 {% if theme.bing_site_verification %}
   <meta name="msvalidate.01" content="{{ theme.bing_site_verification }}" />

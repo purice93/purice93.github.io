@@ -126,30 +126,40 @@ scheme: Muse
 # Key is the link label showing to end users.
 # Value before `||` delimeter is the target permalink.
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, globe icon will be loaded.
-#social:
-  #GitHub: https://github.com/yourname || github
-  #E-Mail: mailto:yourname@gmail.com || envelope
-  #Google: https://plus.google.com/yourname || google
+social:
+  GitHub: https://github.com/purice93 || github
+  # E-Mail: mailto:zoutai93@gmail.com || envelope
+  # Google: https://plus.google.com/soundslow || google
   #Twitter: https://twitter.com/yourname || twitter
   #FB Page: https://www.facebook.com/yourname || facebook
   #VK Group: https://vk.com/yourname || vk
-  #StackOverflow: https://stackoverflow.com/yourname || stack-overflow
+  # StackOverflow: https://stackoverflow.com/soundslow || stack-overflow
   #YouTube: https://youtube.com/yourname || youtube
   #Instagram: https://instagram.com/yourname || instagram
   #Skype: skype:yourname?call|chat || skype
+  CSDN: https://blog.csdn.net/soundslow
+  豆瓣: http://douban.com/people/purice
+  知乎: http://www.zhihu.com/people/zou-tai-89
+  # 等等
 
 social_icons:
   enable: true
   icons_only: false
   transition: false
+  CSDN: csdn
+  豆瓣: douban
+  知乎: zhihu
 
 # Blog rolls
 links_icon: link
-links_title: Links
+links_title: 友情链接
 links_layout: block
 #links_layout: inline
-#links:
-  #Title: http://example.com/
+links:
+  阿里中间件: http://jm.taobao.org/
+  美团点评: https://tech.meituan.com/
+  IBM: https://www.ibm.com/developerworks/cn/java/
+  # Title: http://example.com/
 
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.gif
@@ -231,8 +241,8 @@ post_meta:
 # Dependencies: https://github.com/willin/hexo-wordcount
 post_wordcount:
   item_text: true
-  wordcount: false
-  min2read: false
+  wordcount: true
+  min2read: true
   totalcount: false
   separated_meta: true
 
@@ -243,10 +253,10 @@ post_wordcount:
   #description: ex. subscribe to my blog by scanning my public wechat account
 
 # Reward
-#reward_comment: Donate comment here
-#wechatpay: /images/wechatpay.jpg
-#alipay: /images/alipay.jpg
-#bitcoin: /images/bitcoin.png
+reward_comment: Donate comment here
+wechatpay: /images/wechatpay.jpg
+alipay: /images/alipay.jpg
+# bitcoin: /images/bitcoin.png
 
 # Declare license on posts
 post_copyright:
@@ -426,7 +436,7 @@ gitment:
 # This plugin is more useful in China, make sure you known how to use it.
 # And you can find the use guide at official webiste: http://www.jiathis.com/.
 # Warning: JiaThis does not support https.
-#jiathis:
+jiathis:
   ##uid: Get this uid from http://www.jiathis.com/
 #add_this_id:
 
@@ -605,7 +615,7 @@ algolia_search:
 # Local search
 # Dependencies: https://github.com/flashlab/hexo-generator-search
 local_search:
-  enable: false
+  enable: true
   # if auto, trigger search by changing input
   # if manual, trigger search by pressing enter key or search button
   trigger: auto
@@ -809,6 +819,10 @@ vendors:
 css: css
 js: js
 images: images
+
+# Online contact 
+daovoice: true
+daovoice_app_id: 21d7834a
 
 # Theme version
 version: 5.1.4

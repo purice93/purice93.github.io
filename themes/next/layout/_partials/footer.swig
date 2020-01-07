@@ -40,8 +40,7 @@
 #}</div>
 {% endif %}
 
-<div>
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <span id="busuanzi_container_site_pv" style='display:none'>
     本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
     <span class="post-meta-divider">|</span>
@@ -56,3 +55,7 @@
   #}{{ theme.footer.custom_text }}{#
 #}</div>
 {% endif %}
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共{{ totalcount(site) }}字</span>
+</div>

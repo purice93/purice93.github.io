@@ -17,10 +17,15 @@ menu:
   categories: /categories/ || th           //分类
   tags: /tags/ || tags                     //标签
   about: /about/ || user                   //关于
-  games: /games/ || games                  //游戏
+  游戏: /games/ || gamepad                  //游戏
   #schedule: /schedule/ || calendar        //日程表
   #sitemap: /sitemap.xml || sitemap        //站点地图
   #commonweal: /404/ || heartbeat          //公益404
+
+# menu_icons:
+#   enable: true
+#   # Icon Mapping.
+#   游戏: gamepad-alt
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -120,5 +125,11 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: https://github.com/purice93/hexo
+  repository: https://github.com/purice93/purice93.github.io
   branch: master
+
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
