@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("http://purice93.github.io"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="LongAdder,加法器,JDK8," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="随风而醒" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="传统的原子锁AtomicLong&#x2F;AtomicInt虽然也可以处理大量并发情况下的计数器，但是由于使用了自旋等待，当存在大量竞争时，会存在大量自旋等待，而导致CPU浪费，而有效计算很少，降低了计算效率。 而LongAdder是根据ConcurrentHashMap这类为并发设计的类的基本原理——锁分段，通过维护一个计数数组cells来保存多个计数副本，每个线程只对自己的副本进行操作，最后汇总来得到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并发编程实战14-LongAdder统计加法器-计数器jdk8">
+<meta property="og:url" content="http://yoursite.com/2018/04/17/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%9814-LongAdder%E7%BB%9F%E8%AE%A1%E5%8A%A0%E6%B3%95%E5%99%A8-%E8%AE%A1%E6%95%B0%E5%99%A8jdk8/index.html">
+<meta property="og:site_name" content="随风而醒">
+<meta property="og:description" content="传统的原子锁AtomicLong&#x2F;AtomicInt虽然也可以处理大量并发情况下的计数器，但是由于使用了自旋等待，当存在大量竞争时，会存在大量自旋等待，而导致CPU浪费，而有效计算很少，降低了计算效率。 而LongAdder是根据ConcurrentHashMap这类为并发设计的类的基本原理——锁分段，通过维护一个计数数组cells来保存多个计数副本，每个线程只对自己的副本进行操作，最后汇总来得到">
+<meta property="article:published_time" content="2018-04-17T03:46:56.000Z">
+<meta property="article:modified_time" content="2020-01-08T03:43:01.213Z">
+<meta property="article:author" content="soundslow">
+<meta property="article:tag" content="LongAdder">
+<meta property="article:tag" content="加法器">
+<meta property="article:tag" content="JDK8">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/17/并发编程实战14-LongAdder统计加法器-计数器jdk8/"/>
+
+
+
+
+
+  <title>并发编程实战14-LongAdder统计加法器-计数器jdk8 | 随风而醒</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">随风而醒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">soundslow</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive          //归档"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th           //分类"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags                     //标签"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user                   //关于"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-游戏">
+          <a href="/games/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad                  //游戏"></i> <br />
+            
+            游戏
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/17/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%9814-LongAdder%E7%BB%9F%E8%AE%A1%E5%8A%A0%E6%B3%95%E5%99%A8-%E8%AE%A1%E6%95%B0%E5%99%A8jdk8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="soundslow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="随风而醒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">并发编程实战14-LongAdder统计加法器-计数器jdk8</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-17T11:46:56+08:00">
+                2018-04-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span id="busuanzi_value_page_pv"></span>次阅读
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>传统的原子锁AtomicLong/AtomicInt虽然也可以处理大量并发情况下的计数器，但是由于使用了自旋等待，当存在大量竞争时，会存在大量自旋等待，而导致CPU浪费，而有效计算很少，降低了计算效率。</p>
+<p>而LongAdder是根据ConcurrentHashMap这类为并发设计的类的基本原理——锁分段，通过维护一个计数数组cells来保存多个计数副本，每个线程只对自己的副本进行操作，最后汇总来得到最终结果。</p>
+<blockquote>
+<p>Adder的英文意思为加法器，从字面意思上就可以理解，LongAdder的作用是用来进行统计计算的。比如，我们需要一个计数器，加入计数值为N，当大量的线程访问时，N的值将会出现并发安全，但是，我们并不打算在每个单独的子线程中去查看这个N值，只是在所有的子线程完毕后，才会统计N的总数，即相当于一种并行计算，但是我们不在乎中间结果，只在乎，中间计算都进行了就可以。因此，我们对可以变量创建一个副本N’，每个线程都有这个副本，只对这个副本进行操作，最后，将所有的副本进行汇总就是最终的N值，即：<code>N=N1&#39;+N2&#39;+N3&#39;...+Nn&#39;</code>。</p>
+</blockquote>
+<blockquote>
+<p>详细原理：内部源码使用了一个cells的数组来保存每个线程的副本，第一个线程会初始化数组cells。新来到一个线程，会指向第一个cell，并检测是否有其他线程使用CAS，如果没有，则所有线程公用一个cel副本；否则，如果自旋等待，则当前线程新建一个cell副本，加入到数组cells，对副本进行操作。当所有操作完成后，使用sum函数就可以统计所有的操作。</p>
+</blockquote>
+<p><strong>这里也用到了cas操作，主要是为了防止多线程公用一个cell，导致一个cell数据并发出错，另外注意LongAdder的并不是细粒度的，所以不能使用中间值</strong></p>
+<ol>
+<li>线程副本cell<br>LongAdder继承自Striped64类，主要逻辑方法在Striped64中。<br>其中cell即为每个线程的副本变量，使用的是一个静态内部类Cell，维护了一个value变量</li>
+</ol>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@sun<span class="selector-class">.misc</span><span class="selector-class">.Contended</span> static final class Cell &#123;</span><br><span class="line">        volatile long value;</span><br><span class="line">        Cell(long x) &#123; value = x; &#125;</span><br><span class="line">        final boolean cas(long cmp, long val) &#123;</span><br><span class="line">            return UNSAFE.compareAndSwapLong(this, valueOffset, cmp, val);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Unsafe mechanics</span></span><br><span class="line">        private static final sun.misc.Unsafe UNSAFE;</span><br><span class="line">        private static final long valueOffset;</span><br><span class="line">        static &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                UNSAFE = sun.misc.Unsafe.getUnsafe();</span><br><span class="line">                Class&lt;?&gt; ak = Cell.class;</span><br><span class="line">                valueOffset = UNSAFE.objectFieldOffset</span><br><span class="line">                    (ak.getDeclaredField("value"));</span><br><span class="line">            &#125; catch (Exception e) &#123;</span><br><span class="line">                throw new Error(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>问题：既然Cell这么简单，为什么不直接用long value？<br>我的理解：可能要设计到Java值引用问题，如果直接使用long value，在线程B进行数组扩容后，线程A修改的value值将无法反映到线程B；而使用Cell对象对value进行包装后，由于线程A只会修改Cell对象的value值，不会修改Cell对象，所以线程B的Cell中的value也会跟着改变，就不会出现值问题。更具体的了解，可能需要了解一下java的值传递（java没有引用传递）</p>
+<p> 2.Striped64主体代码<br> 主方法为longAccumulate方法，主要处理数组的扩容和冲突检查</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br></pre></td><td class="code"><pre><span class="line">abstract class Striped64 extends Number &#123;  </span><br><span class="line">    @sun<span class="selector-class">.misc</span><span class="selector-class">.Contended</span> static final class Cell &#123; ... &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">/** Number of CPUS, to place bound on table size */</span>  </span><br><span class="line">    static final int NCPU = Runtime.getRuntime().availableProcessors();  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// cell数组，长度一样要是2^n，可以类比为jdk1.7的ConcurrentHashMap中的segments数组  </span></span><br><span class="line">    transient volatile Cell[] cells;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 累积器的基本值，在两种情况下会使用：  </span></span><br><span class="line">    <span class="comment">// 1、没有遇到并发的情况，直接使用base，速度更快；  </span></span><br><span class="line">    <span class="comment">// 2、多线程并发初始化table数组时，必须要保证table数组只被初始化一次，因此只有一个线程能够竞争成功，这种情况下竞争失败的线程会尝试在base上进行一次累积操作  </span></span><br><span class="line">    transient volatile long base;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 自旋标识，在对cells进行初始化，或者后续扩容时，需要通过CAS操作把此标识设置为1（busy，忙标识，相当于加锁），取消busy时可以直接使用cellsBusy = 0，相当于释放锁  </span></span><br><span class="line">    transient volatile int cellsBusy;  </span><br><span class="line">  </span><br><span class="line">    Striped64() &#123;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 使用CAS更新base的值  </span></span><br><span class="line">    final boolean casBase(long cmp, long val) &#123;  </span><br><span class="line">        return UNSAFE.compareAndSwapLong(this, BASE, cmp, val);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 使用CAS将cells自旋标识更新为1  </span></span><br><span class="line">    <span class="comment">// 更新为0时可以不用CAS，直接使用cellsBusy就行  </span></span><br><span class="line">    final boolean casCellsBusy() &#123;  </span><br><span class="line">        return UNSAFE.compareAndSwapInt(this, CELLSBUSY, 0, 1);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 下面这两个方法是ThreadLocalRandom中的方法，不过因为包访问关系，这里又重新写一遍  </span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">// probe翻译过来是探测/探测器/探针这些，不好理解，它是ThreadLocalRandom里面的一个属性，  </span></span><br><span class="line">    <span class="comment">// 不过并不影响对Striped64的理解，这里可以把它理解为线程本身的hash值  </span></span><br><span class="line">    static final int getProbe() &#123;  </span><br><span class="line">        return UNSAFE.getInt(Thread.currentThread(), PROBE);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 相当于rehash，重新算一遍线程的hash值  </span></span><br><span class="line">    static final int advanceProbe(int probe) &#123;  </span><br><span class="line">        probe ^= probe &lt;&lt; 13;   // xorshift  </span><br><span class="line">        probe ^= probe &gt;&gt;&gt; 17;  </span><br><span class="line">        probe ^= probe &lt;&lt; 5;  </span><br><span class="line">        UNSAFE.putInt(Thread.currentThread(), PROBE, probe);  </span><br><span class="line">        return probe;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">/** </span></span><br><span class="line"><span class="comment">     * 核心方法的实现，此方法建议在外部进行一次CAS操作（cell != null时尝试CAS更新base值，cells != null时，CAS更新hash值取模后对应的cell.value） </span></span><br><span class="line"><span class="comment">     * @param x the value 前面我说的二元运算中的第二个操作数，也就是外部提供的那个操作数 </span></span><br><span class="line"><span class="comment">     * @param fn the update function, or null for add (this convention avoids the need for an extra field or function in LongAdder). </span></span><br><span class="line"><span class="comment">     *     外部提供的二元算术操作，实例持有并且只能有一个，生命周期内保持不变，null代表LongAdder这种特殊但是最常用的情况，可以减少一次方法调用 </span></span><br><span class="line"><span class="comment">     * @param wasUncontended false if CAS failed before call 如果为false，表明调用者预先调用的一次CAS操作都失败了 </span></span><br><span class="line"><span class="comment">     */</span>  </span><br><span class="line">    final void longAccumulate(long x, LongBinaryOperator fn, boolean wasUncontended) &#123;  </span><br><span class="line">        int h;  </span><br><span class="line">        <span class="comment">// 这个if相当于给线程生成一个非0的hash值  </span></span><br><span class="line">        <span class="keyword">if</span> ((h = getProbe()) == <span class="number">0</span>) &#123;  </span><br><span class="line">            ThreadLocalRandom.current(); // force initialization  </span><br><span class="line">            h = getProbe();  </span><br><span class="line">            wasUncontended = true;  </span><br><span class="line">        &#125;  </span><br><span class="line">        boolean collide = false; // True if last slot nonempty 如果hash取模映射得到的Cell单元不是null，则为true，此值也可以看作是扩容意向，感觉这个更好理解  </span><br><span class="line">        for (;;) &#123;  </span><br><span class="line">            Cell[] as; Cell a; int n; long v;  </span><br><span class="line">            <span class="keyword">if</span> ((as = cells) != null &amp;&amp; (n = as.length) &gt; <span class="number">0</span>) &#123; <span class="comment">// cells已经被初始化了  </span></span><br><span class="line">                <span class="keyword">if</span> ((<span class="selector-tag">a</span> = as[(n - <span class="number">1</span>) &amp; h]) == null) &#123; <span class="comment">// hash取模映射得到的Cell单元还为null（为null表示还没有被使用）  </span></span><br><span class="line">                    <span class="keyword">if</span> (cellsBusy == <span class="number">0</span>) &#123;       <span class="comment">// Try to attach new Cell 如果没有线程正在执行扩容  </span></span><br><span class="line">                        Cell r = new Cell(x);   // Optimistically create 先创建新的累积单元  </span><br><span class="line">                        <span class="keyword">if</span> (cellsBusy == <span class="number">0</span> &amp;&amp; casCellsBusy()) &#123; <span class="comment">// 尝试加锁  </span></span><br><span class="line">                            boolean created = false;  </span><br><span class="line">                            try &#123;               <span class="comment">// Recheck under lock 在有锁的情况下再检测一遍之前的判断  </span></span><br><span class="line">                                Cell[] rs; int m, j;  </span><br><span class="line">                                <span class="keyword">if</span> ((rs = cells) != null &amp;&amp; (m = rs.length) &gt; <span class="number">0</span> &amp;&amp; rs[j = (m - <span class="number">1</span>) &amp; h] == null) &#123; <span class="comment">// 考虑别的线程可能执行了扩容，这里重新赋值重新判断  </span></span><br><span class="line">                                    rs[j] = r; // 对没有使用的Cell单元进行累积操作（第一次赋值相当于是累积上一个操作数，求和时再和base执行一次运算就得到实际的结果）  </span><br><span class="line">                                    created = true;  </span><br><span class="line">                                &#125;  </span><br><span class="line">                            &#125; finally &#123;  </span><br><span class="line">                                cellsBusy = 0; 清空自旋标识，释放锁  </span><br><span class="line">                            &#125;  </span><br><span class="line">                            <span class="keyword">if</span> (created) <span class="comment">// 如果原本为null的Cell单元是由自己进行第一次累积操作，那么任务已经完成了，所以可以退出循环  </span></span><br><span class="line">                                break;  </span><br><span class="line">                            continue;           // Slot is now non-empty 不是自己进行第一次累积操作，重头再来  </span><br><span class="line">                        &#125;  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    collide = false; // 执行这一句是因为cells被加锁了，不能往下继续执行第一次的赋值操作（第一次累积），所以还不能考虑扩容  </span><br><span class="line">                &#125;  </span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (!wasUncontended) <span class="comment">// CAS already known to fail 前面一次CAS更新a.value（进行一次累积）的尝试已经失败了，说明已经发生了线程竞争  </span></span><br><span class="line">                    wasUncontended = true; // Continue after rehash 情况失败标识，后面去重新算一遍线程的hash值  </span><br><span class="line">                else if (a.cas(v = a.value, ((fn == null) ? v + x : fn.applyAsLong(v, x)))) // 尝试CAS更新a.value（进行一次累积） ------ 标记为分支A  </span><br><span class="line">                    break; // 成功了就完成了累积任务，退出循环  </span><br><span class="line">                else if (n &gt;= NCPU || cells != as) // cell数组已经是最大的了，或者中途发生了扩容操作。因为NCPU不一定是2^n，所以这里用 &gt;=  </span><br><span class="line">                    collide = false; // At max size or stale 长度n是递增的，执行到了这个分支，说明n &gt;= NCPU会永远为true，下面两个else if就永远不会被执行了，也就永远不会再进行扩容  </span><br><span class="line">                                     <span class="comment">// CPU能够并行的CAS操作的最大数量是它的核心数（CAS在x86中对应的指令是cmpxchg，多核需要通过锁缓存来保证整体原子性），当n &gt;= NCPU时，再出现几个线程映射到同一个Cell导致CAS竞争的情况，那就真不关扩容的事了，完全是hash值的锅了  </span></span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (!collide) <span class="comment">// 映射到的Cell单元不是null，并且尝试对它进行累积时，CAS竞争失败了，这时候把扩容意向设置为true  </span></span><br><span class="line">                                   <span class="comment">// 下一次循环如果还是跟这一次一样，说明竞争很严重，那么就真正扩容  </span></span><br><span class="line">                    collide = true; // 把扩容意向设置为true，只有这里才会给collide赋值为true，也只有执行了这一句，才可能执行后面一个else if进行扩容  </span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (cellsBusy == <span class="number">0</span> &amp;&amp; casCellsBusy()) &#123; <span class="comment">// 最后再考虑扩容，能到这一步说明竞争很激烈，尝试加锁进行扩容 ------ 标记为分支B  </span></span><br><span class="line">                    try &#123;  </span><br><span class="line">                        <span class="keyword">if</span> (cells == as) &#123;      <span class="comment">// Expand table unless stale 检查下是否被别的线程扩容了（CAS更新锁标识，处理不了ABA问题，这里再检查一遍）  </span></span><br><span class="line">                            Cell[] rs = new Cell[n &lt;&lt; 1]; // 执行2倍扩容  </span><br><span class="line">                            for (int i = 0; i &lt; n; ++i)  </span><br><span class="line">                                rs[i] = as[i];  </span><br><span class="line">                            cells = rs;  </span><br><span class="line">                        &#125;  </span><br><span class="line">                    &#125; finally &#123;  </span><br><span class="line">                        cellsBusy = 0; // 释放锁  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    collide = false; // 扩容意向为false  </span><br><span class="line">                    continue; // Retry with expanded table 扩容后重头再来  </span><br><span class="line">                &#125;  </span><br><span class="line">                h = advanceProbe(h); // 重新给线程生成一个hash值，降低hash冲突，减少映射到同一个Cell导致CAS竞争的情况  </span><br><span class="line">            &#125;  </span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (cellsBusy == <span class="number">0</span> &amp;&amp; cells == as &amp;&amp; casCellsBusy()) &#123; <span class="comment">// cells没有被加锁，并且它没有被初始化，那么就尝试对它进行加锁，加锁成功进入这个else if  </span></span><br><span class="line">                boolean init = false;  </span><br><span class="line">                try &#123;                           <span class="comment">// Initialize table  </span></span><br><span class="line">                    <span class="keyword">if</span> (cells == as) &#123; <span class="comment">// CAS避免不了ABA问题，这里再检测一次，如果还是null，或者空数组，那么就执行初始化  </span></span><br><span class="line">                        Cell[] rs = new Cell[2]; // 初始化时只创建两个单元  </span><br><span class="line">                        rs[h &amp; 1] = new Cell(x); // 对其中一个单元进行累积操作，另一个不管，继续为null  </span><br><span class="line">                        cells = rs;  </span><br><span class="line">                        init = true;  </span><br><span class="line">                    &#125;  </span><br><span class="line">                &#125; finally &#123;  </span><br><span class="line">                    cellsBusy = 0; // 清空自旋标识，释放锁  </span><br><span class="line">                &#125;  </span><br><span class="line">                <span class="keyword">if</span> (init) <span class="comment">// 如果某个原本为null的Cell单元是由自己进行第一次累积操作，那么任务已经完成了，所以可以退出循环  </span></span><br><span class="line">                    break;  </span><br><span class="line">            &#125;  </span><br><span class="line">            else if (casBase(v = base, ((fn == null) ? v + x : fn.applyAsLong(v, x)))) // cells正在进行初始化时，尝试直接在base上进行累加操作  </span><br><span class="line">                break;                          // Fall back on using base 直接在base上进行累积操作成功了，任务完成，可以退出循环了  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// double的不讲，更long的逻辑基本上是一样的  </span></span><br><span class="line">    final void doubleAccumulate(double x, DoubleBinaryOperator fn, boolean wasUncontended);  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// Unsafe mechanics Unsafe初始化  </span></span><br><span class="line">    private static final sun.misc.Unsafe UNSAFE;  </span><br><span class="line">    private static final long BASE;  </span><br><span class="line">    private static final long CELLSBUSY;  </span><br><span class="line">    private static final long PROBE;  </span><br><span class="line">    static &#123;  </span><br><span class="line">        try &#123;  </span><br><span class="line">            UNSAFE = sun.misc.Unsafe.getUnsafe();  </span><br><span class="line">            Class&lt;?&gt; sk = Striped64.class;  </span><br><span class="line">            BASE = UNSAFE<span class="selector-class">.objectFieldOffset</span>  </span><br><span class="line">                (sk.getDeclaredField("base"));  </span><br><span class="line">            CELLSBUSY = UNSAFE<span class="selector-class">.objectFieldOffset</span>  </span><br><span class="line">                (sk.getDeclaredField("cellsBusy"));  </span><br><span class="line">            Class&lt;?&gt; tk = Thread.class;  </span><br><span class="line">            PROBE = UNSAFE<span class="selector-class">.objectFieldOffset</span>  </span><br><span class="line">                (tk.getDeclaredField("threadLocalRandomProbe"));  </span><br><span class="line">        &#125; catch (Exception e) &#123;  </span><br><span class="line">            throw new Error(e);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 3.LongAdder的add()方法<br> add(long x) 方法不仅仅实现加，参数为负就为减；调用longAccumulate来进行操作</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public void add(long x) &#123;  </span><br><span class="line">    Cell[] as; long b, v; int m; Cell a;  </span><br><span class="line">    if ((as = cells) != null || !casBase(b = base, b + x)) &#123;  </span><br><span class="line">        boolean uncontended = true;  </span><br><span class="line">        if (as == null || (m = as.length - 1) &lt; 0 ||  </span><br><span class="line">            (a = as[getProbe() &amp; m]) == null ||  </span><br><span class="line">            !(uncontended = <span class="selector-tag">a</span>.cas(v = <span class="selector-tag">a</span><span class="selector-class">.value</span>, v + x)))  </span><br><span class="line">            longAccumulate(x, null, uncontended);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>jdk1.8的ConcurrentHashMap中，没有再使用Segment，使用了一个简单的仿造LongAdder实现的计数器，这样能够保证计数效率不低于使用Segment的效率。</strong></p>
+<p><a href="https://blog.csdn.net/u011392897/article/details/60480108" target="_blank" rel="noopener">jdk1.8 LongAdder源码学习</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="soundslow 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="soundslow 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LongAdder/" rel="tag"># LongAdder</a>
+          
+            <a href="/tags/%E5%8A%A0%E6%B3%95%E5%99%A8/" rel="tag"># 加法器</a>
+          
+            <a href="/tags/JDK8/" rel="tag"># JDK8</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/17/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%9813-%E5%90%8C%E6%AD%A5%E4%B8%AD%E7%9A%84%E5%9B%9B%E7%A7%8D%E9%94%81synchronized%E3%80%81ReentrantLock%E3%80%81ReentrantReadWriteLock%E3%80%81StampedLock/" rel="next" title="并发编程实战13-同步中的四种锁synchronized、ReentrantLock、ReentrantReadWriteLock、StampedLock">
+                <i class="fa fa-chevron-left"></i> 并发编程实战13-同步中的四种锁synchronized、ReentrantLock、ReentrantReadWriteLock、StampedLock
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/17/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%9815-%E9%87%8D%E6%8E%92%E5%BA%8F%E3%80%81happens-before%E3%80%81final/" rel="prev" title="并发编程实战15-重排序、happens-before">
+                并发编程实战15-重排序、happens-before <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/default_avatar.jpg"
+                alt="soundslow" />
+            
+              <p class="site-author-name" itemprop="name">soundslow</p>
+              <p class="site-description motion-element" itemprop="description">I take the newer medications, but I still see things that are not here.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive%20%20%20%20%20%20%20%20%20%20/%E5%BD%92%E6%A1%A3">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">64</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/purice93" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/soundslow" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://douban.com/people/purice" target="_blank" title="豆瓣">
+                      
+                        <i class="fa fa-fw fa-globe"></i>豆瓣</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://www.zhihu.com/people/zou-tai-89" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jm.taobao.org/" title="阿里中间件" target="_blank">阿里中间件</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://tech.meituan.com/" title="美团点评" target="_blank">美团点评</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.ibm.com/developerworks/cn/java/" title="IBM" target="_blank">IBM</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">soundslow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+<div><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数 <span id="busuanzi_value_site_uv"></span> 人
+</span>
+</div>
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共39.7k字</span>
+</div>
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
