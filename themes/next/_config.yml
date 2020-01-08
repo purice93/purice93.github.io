@@ -829,5 +829,20 @@ images: images
 daovoice: true
 daovoice_app_id: 21d7834a
 
+gitalk:
+  enable: true
+  ClientID: a7cb53e868f43c47336f
+  ClientSecret: 9cd4ba9a4483e96ba688919a15a9bc97a3ab535d
+  repo: gitalk
+  owner: purice93
+  adminUser: ['purice93']
+  IdPrefix: gitalk
+  labels:
+    - gitalk
+  perPage: 10
+  pagerDirection: last
+  createIssueManually: true
+  distractionFreeMode: false
+
 # Theme version
 version: 5.1.4
