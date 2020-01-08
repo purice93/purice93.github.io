@@ -116,7 +116,7 @@
 <meta name="description" content="锁重入：也叫做递归锁 某个线程获得一个已经由它自己持有的锁对象，那么这个请求就会成功，即重入 重入是对本线程来说，即本线程多资源可以多次加锁进入，而不会出现阻塞 在JAVA环境下 ReentrantLock 和synchronized 都是可重入锁 场景：比如数据库中，用户名和密码保存在本地txt文件中，则登录验证方法和更新密码方法都应该被加synchronized，那么当更新密码的时候需要验证">
 <meta property="og:type" content="article">
 <meta property="og:title" content="并发编程实战4-自旋锁，死锁，以及锁重入详解">
-<meta property="og:url" content="http://yoursite.com/2018/04/09/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%984-%E8%87%AA%E6%97%8B%E9%94%81%EF%BC%8C%E6%AD%BB%E9%94%81%EF%BC%8C%E4%BB%A5%E5%8F%8A%E9%94%81%E9%87%8D%E5%85%A5%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:url" content="https://purice93.github.io/2018/04/09/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%984-%E8%87%AA%E6%97%8B%E9%94%81%EF%BC%8C%E6%AD%BB%E9%94%81%EF%BC%8C%E4%BB%A5%E5%8F%8A%E9%94%81%E9%87%8D%E5%85%A5%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="随风而醒">
 <meta property="og:description" content="锁重入：也叫做递归锁 某个线程获得一个已经由它自己持有的锁对象，那么这个请求就会成功，即重入 重入是对本线程来说，即本线程多资源可以多次加锁进入，而不会出现阻塞 在JAVA环境下 ReentrantLock 和synchronized 都是可重入锁 场景：比如数据库中，用户名和密码保存在本地txt文件中，则登录验证方法和更新密码方法都应该被加synchronized，那么当更新密码的时候需要验证">
 <meta property="og:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1523269535365.jpg">
@@ -157,7 +157,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/09/并发编程实战4-自旋锁，死锁，以及锁重入详解/"/>
+  <link rel="canonical" href="https://purice93.github.io/2018/04/09/并发编程实战4-自旋锁，死锁，以及锁重入详解/"/>
 
 
 
@@ -344,7 +344,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/09/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%984-%E8%87%AA%E6%97%8B%E9%94%81%EF%BC%8C%E6%AD%BB%E9%94%81%EF%BC%8C%E4%BB%A5%E5%8F%8A%E9%94%81%E9%87%8D%E5%85%A5%E8%AF%A6%E8%A7%A3/">
+    <link itemprop="mainEntityOfPage" href="https://purice93.github.io/2018/04/09/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%984-%E8%87%AA%E6%97%8B%E9%94%81%EF%BC%8C%E6%AD%BB%E9%94%81%EF%BC%8C%E4%BB%A5%E5%8F%8A%E9%94%81%E9%87%8D%E5%85%A5%E8%AF%A6%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="soundslow">
@@ -1336,6 +1336,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

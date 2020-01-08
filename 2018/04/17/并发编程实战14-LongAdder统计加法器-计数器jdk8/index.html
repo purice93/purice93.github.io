@@ -116,7 +116,7 @@
 <meta name="description" content="传统的原子锁AtomicLong&#x2F;AtomicInt虽然也可以处理大量并发情况下的计数器，但是由于使用了自旋等待，当存在大量竞争时，会存在大量自旋等待，而导致CPU浪费，而有效计算很少，降低了计算效率。 而LongAdder是根据ConcurrentHashMap这类为并发设计的类的基本原理——锁分段，通过维护一个计数数组cells来保存多个计数副本，每个线程只对自己的副本进行操作，最后汇总来得到">
 <meta property="og:type" content="article">
 <meta property="og:title" content="并发编程实战14-LongAdder统计加法器-计数器jdk8">
-<meta property="og:url" content="http://yoursite.com/2018/04/17/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%9814-LongAdder%E7%BB%9F%E8%AE%A1%E5%8A%A0%E6%B3%95%E5%99%A8-%E8%AE%A1%E6%95%B0%E5%99%A8jdk8/index.html">
+<meta property="og:url" content="https://purice93.github.io/2018/04/17/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%9814-LongAdder%E7%BB%9F%E8%AE%A1%E5%8A%A0%E6%B3%95%E5%99%A8-%E8%AE%A1%E6%95%B0%E5%99%A8jdk8/index.html">
 <meta property="og:site_name" content="随风而醒">
 <meta property="og:description" content="传统的原子锁AtomicLong&#x2F;AtomicInt虽然也可以处理大量并发情况下的计数器，但是由于使用了自旋等待，当存在大量竞争时，会存在大量自旋等待，而导致CPU浪费，而有效计算很少，降低了计算效率。 而LongAdder是根据ConcurrentHashMap这类为并发设计的类的基本原理——锁分段，通过维护一个计数数组cells来保存多个计数副本，每个线程只对自己的副本进行操作，最后汇总来得到">
 <meta property="article:published_time" content="2018-04-17T03:46:56.000Z">
@@ -155,7 +155,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/17/并发编程实战14-LongAdder统计加法器-计数器jdk8/"/>
+  <link rel="canonical" href="https://purice93.github.io/2018/04/17/并发编程实战14-LongAdder统计加法器-计数器jdk8/"/>
 
 
 
@@ -342,7 +342,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/17/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%9814-LongAdder%E7%BB%9F%E8%AE%A1%E5%8A%A0%E6%B3%95%E5%99%A8-%E8%AE%A1%E6%95%B0%E5%99%A8jdk8/">
+    <link itemprop="mainEntityOfPage" href="https://purice93.github.io/2018/04/17/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%9814-LongAdder%E7%BB%9F%E8%AE%A1%E5%8A%A0%E6%B3%95%E5%99%A8-%E8%AE%A1%E6%95%B0%E5%99%A8jdk8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="soundslow">
@@ -1282,6 +1282,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

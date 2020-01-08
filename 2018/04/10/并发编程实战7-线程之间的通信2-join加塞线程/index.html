@@ -116,7 +116,7 @@
 <meta name="description" content="thread.Join把指定的线程加入到当前线程，可以将两个交替执行的线程合并为顺序执行的线程。比如在线程B中调用了线程A的Join()方法，直到线程A执行完毕后，才会继续执行线程B。  t.join();      &#x2F;&#x2F;使调用线程 t 在此之前执行完毕。t.join(1000);  &#x2F;&#x2F;等待 t 线程，等待时间是1000毫秒  一、为什么要用join()方法：在很多情况下，主线程生成并起动了子">
 <meta property="og:type" content="article">
 <meta property="og:title" content="并发编程实战7-线程之间的通信2-join阻塞线程">
-<meta property="og:url" content="http://yoursite.com/2018/04/10/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%987-%E7%BA%BF%E7%A8%8B%E4%B9%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A12-join%E5%8A%A0%E5%A1%9E%E7%BA%BF%E7%A8%8B/index.html">
+<meta property="og:url" content="https://purice93.github.io/2018/04/10/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%987-%E7%BA%BF%E7%A8%8B%E4%B9%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A12-join%E5%8A%A0%E5%A1%9E%E7%BA%BF%E7%A8%8B/index.html">
 <meta property="og:site_name" content="随风而醒">
 <meta property="og:description" content="thread.Join把指定的线程加入到当前线程，可以将两个交替执行的线程合并为顺序执行的线程。比如在线程B中调用了线程A的Join()方法，直到线程A执行完毕后，才会继续执行线程B。  t.join();      &#x2F;&#x2F;使调用线程 t 在此之前执行完毕。t.join(1000);  &#x2F;&#x2F;等待 t 线程，等待时间是1000毫秒  一、为什么要用join()方法：在很多情况下，主线程生成并起动了子">
 <meta property="article:published_time" content="2018-04-10T03:46:42.000Z">
@@ -155,7 +155,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/10/并发编程实战7-线程之间的通信2-join加塞线程/"/>
+  <link rel="canonical" href="https://purice93.github.io/2018/04/10/并发编程实战7-线程之间的通信2-join加塞线程/"/>
 
 
 
@@ -342,7 +342,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/10/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%987-%E7%BA%BF%E7%A8%8B%E4%B9%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A12-join%E5%8A%A0%E5%A1%9E%E7%BA%BF%E7%A8%8B/">
+    <link itemprop="mainEntityOfPage" href="https://purice93.github.io/2018/04/10/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%987-%E7%BA%BF%E7%A8%8B%E4%B9%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A12-join%E5%8A%A0%E5%A1%9E%E7%BA%BF%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="soundslow">
@@ -1280,6 +1280,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

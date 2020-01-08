@@ -116,7 +116,7 @@
 <meta name="description" content="为了使得分发后的多个tomcat服务器，可以对请求session进行共享，我们需要使用一个特殊的数据服务器。一般有memcached和redis3。（redis没有这个功能）  session共享原理  http协议是无状态的，即你连续访问某个网页100次和访问1次对服务器来说是没有区别对待的，因为它记不住你。那么，在一些场合，确实需要服务器记住当前用户怎么办？比如用户登录邮箱后，接下来要收邮件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分布式服务器中的session共享问题">
-<meta property="og:url" content="http://yoursite.com/2018/03/18/%E5%B9%B6%E5%8F%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E7%9A%84session%E5%85%B1%E4%BA%AB%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:url" content="https://purice93.github.io/2018/03/18/%E5%B9%B6%E5%8F%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E7%9A%84session%E5%85%B1%E4%BA%AB%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="随风而醒">
 <meta property="og:description" content="为了使得分发后的多个tomcat服务器，可以对请求session进行共享，我们需要使用一个特殊的数据服务器。一般有memcached和redis3。（redis没有这个功能）  session共享原理  http协议是无状态的，即你连续访问某个网页100次和访问1次对服务器来说是没有区别对待的，因为它记不住你。那么，在一些场合，确实需要服务器记住当前用户怎么办？比如用户登录邮箱后，接下来要收邮件">
 <meta property="og:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521338268310.jpg">
@@ -169,7 +169,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/18/并发服务器中的session共享问题/"/>
+  <link rel="canonical" href="https://purice93.github.io/2018/03/18/并发服务器中的session共享问题/"/>
 
 
 
@@ -356,7 +356,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/18/%E5%B9%B6%E5%8F%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E7%9A%84session%E5%85%B1%E4%BA%AB%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="https://purice93.github.io/2018/03/18/%E5%B9%B6%E5%8F%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E7%9A%84session%E5%85%B1%E4%BA%AB%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="soundslow">
@@ -1342,6 +1342,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

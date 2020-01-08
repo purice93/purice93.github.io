@@ -116,7 +116,7 @@
 <meta name="description" content="并发安全问题主要是出现在写的情况下，而读取数据并不影响数据的结果；另外，大高并发的情况下，大多数都是数据的读取，写操作是很少的，所以可以将数据的读写进行分离，将大大提高运行效率。 读写锁又叫做共享锁和排它锁，即读取是线程共享的：可以多个线程一起读取，但是不能被写；写入是排他性的，只能有一个线程进行操作：既不能被读取，也不能被其他线程写入。三种：读读不互斥，读写互斥，写写互斥。         原">
 <meta property="og:type" content="article">
 <meta property="og:title" content="并发编程实战5-Java中的读写锁ReentrantReadWriteLock(转载)">
-<meta property="og:url" content="http://yoursite.com/2018/04/10/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%985-Java%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E9%94%81ReentrantReadWriteLock/index.html">
+<meta property="og:url" content="https://purice93.github.io/2018/04/10/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%985-Java%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E9%94%81ReentrantReadWriteLock/index.html">
 <meta property="og:site_name" content="随风而醒">
 <meta property="og:description" content="并发安全问题主要是出现在写的情况下，而读取数据并不影响数据的结果；另外，大高并发的情况下，大多数都是数据的读取，写操作是很少的，所以可以将数据的读写进行分离，将大大提高运行效率。 读写锁又叫做共享锁和排它锁，即读取是线程共享的：可以多个线程一起读取，但是不能被写；写入是排他性的，只能有一个线程进行操作：既不能被读取，也不能被其他线程写入。三种：读读不互斥，读写互斥，写写互斥。         原">
 <meta property="article:published_time" content="2018-04-10T03:44:08.000Z">
@@ -154,7 +154,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/10/并发编程实战5-Java中的读写锁ReentrantReadWriteLock/"/>
+  <link rel="canonical" href="https://purice93.github.io/2018/04/10/并发编程实战5-Java中的读写锁ReentrantReadWriteLock/"/>
 
 
 
@@ -341,7 +341,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/10/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%985-Java%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E9%94%81ReentrantReadWriteLock/">
+    <link itemprop="mainEntityOfPage" href="https://purice93.github.io/2018/04/10/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%985-Java%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E9%94%81ReentrantReadWriteLock/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="soundslow">
@@ -1413,6 +1413,21 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   
