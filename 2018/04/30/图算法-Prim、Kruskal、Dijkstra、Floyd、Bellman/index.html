@@ -119,13 +119,13 @@
 <meta property="og:url" content="https://purice93.github.io/2018/04/30/%E5%9B%BE%E7%AE%97%E6%B3%95-Prim%E3%80%81Kruskal%E3%80%81Dijkstra%E3%80%81Floyd%E3%80%81Bellman/index.html">
 <meta property="og:site_name" content="随风而行">
 <meta property="og:description" content="现实生活中，我们常常遇到一些涉及到图的问题；比如一个视频网站如何分配网络服务器，才能使得资源成本最小化；几个城市之间要修路，如何规划才能使得成本最小。另外现在是五一，有几个城市路线规划，在考虑路费时间等因素条件下，如何规划旅游路线。这些的种种问题，都可以化为图规划问题。前两个即最小生成树问题，后面一个即最短路径问题。   最小生成树最小生成树，即对于一个加权图，如何规划路线，使得图中每个节点都能">
-<meta property="og:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525079110741.jpg">
-<meta property="og:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525094329301.jpg">
-<meta property="og:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525079241245.jpg">
-<meta property="og:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525093647689.jpg">
-<meta property="og:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525094099021.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525079110741.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525094329301.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525079241245.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525093647689.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525094099021.jpg">
 <meta property="article:published_time" content="2018-04-30T15:56:17.000Z">
-<meta property="article:modified_time" content="2020-01-09T07:36:55.135Z">
+<meta property="article:modified_time" content="2020-01-09T13:30:51.283Z">
 <meta property="article:author" content="soundslow">
 <meta property="article:tag" content="图算法">
 <meta property="article:tag" content="Prim">
@@ -137,7 +137,7 @@
 <meta property="article:tag" content="无向图">
 <meta property="article:tag" content="最优化">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525079110741.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525079110741.jpg">
 
 
 
@@ -488,11 +488,11 @@
 <p>典型算法：Prim和Kruskal</p>
 <ul>
 <li>Prim算法，请参照《算法4》p399图例<blockquote>
-<p>每次对已访问的节点所连接的外部边进行排序，找到最短的边作为下一个边，进行连接。（重点是已访问）<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525079110741.jpg" alt="prim"><br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525094329301.jpg" alt="enter description here"></p>
+<p>每次对已访问的节点所连接的外部边进行排序，找到最短的边作为下一个边，进行连接。（重点是已访问）<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525079110741.jpg" alt="prim"><br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525094329301.jpg" alt="enter description here"></p>
 </blockquote>
 </li>
 <li>Kruskal<blockquote>
-<p>与Prim算法稍微有点区别。Kruskal算法首先将所有的权重边进行排序，然后对排序的遍历连接，直到所有的边都简历连接关系。（所有的边，不仅仅是已访问）<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525079241245.jpg" alt="kuuskal"></p>
+<p>与Prim算法稍微有点区别。Kruskal算法首先将所有的权重边进行排序，然后对排序的遍历连接，直到所有的边都简历连接关系。（所有的边，不仅仅是已访问）<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525079241245.jpg" alt="kuuskal"></p>
 </blockquote>
 </li>
 </ul>
@@ -503,12 +503,12 @@
 <ul>
 <li><p>Dijkstra</p>
 <blockquote>
-<p>Dijkstra思想类似于A*算法：graph[src][d]=graph[src][v] + graph[v][d]；其中src为起点，V为已访问节点，d为待访问节点（即相邻的节点）<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525093647689.jpg" alt="Dijkstra"></p>
+<p>Dijkstra思想类似于A*算法：graph[src][d]=graph[src][v] + graph[v][d]；其中src为起点，V为已访问节点，d为待访问节点（即相邻的节点）<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525093647689.jpg" alt="Dijkstra"></p>
 </blockquote>
 </li>
 <li><p>Floyd</p>
 <blockquote>
-<p>Floyd思想类似化学催化剂原理，即Dis(i,k) + Dis(k,j) &lt; Dis(i,j)；A直接生成C成本需要100分钟，但是A生成B再生成C总成本：A到B加上B到C可能只有10+20=30分钟，所以，三次遍历整个路径，将所以可以使用催化剂缩短的路径更改，并保存最短路径队列<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525094099021.jpg" alt="Floyd"></p>
+<p>Floyd思想类似化学催化剂原理，即Dis(i,k) + Dis(k,j) &lt; Dis(i,j)；A直接生成C成本需要100分钟，但是A生成B再生成C总成本：A到B加上B到C可能只有10+20=30分钟，所以，三次遍历整个路径，将所以可以使用催化剂缩短的路径更改，并保存最短路径队列<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525094099021.jpg" alt="Floyd"></p>
 </blockquote>
 </li>
 <li><p>Ford</p>

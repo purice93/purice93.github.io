@@ -623,7 +623,7 @@
 </ol>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">ending = tf.strided_slice(data, [<span class="number">0</span>, <span class="number">0</span>], [batch_size, <span class="number">-1</span>], [<span class="number">1</span>, <span class="number">1</span>])</span><br></pre></td></tr></table></figure>
 <p> Args:<br>    input_: A <code>Tensor</code>.<br>    begin: An <code>int32</code> or <code>int64</code> <code>Tensor</code>.<br>    end: An <code>int32</code> or <code>int64</code> <code>Tensor</code>.<br>    strides: An <code>int32</code> or <code>int64</code> <code>Tensor</code>.</p>
-<p>对数据矩阵进行切片，strides一般为全1值，这里的意思相当于切除最后一个字母。<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1538035875521.png" alt="enter description here"></p>
+<p>对数据矩阵进行切片，strides一般为全1值，这里的意思相当于切除最后一个字母。<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1538035875521.png" alt="enter description here"></p>
 <ol start="6">
 <li>tf.nn.embedding_lookup<br>输入张量映射</li>
 </ol>
@@ -830,7 +830,7 @@
 <ul>
 <li>redis的复制功能需要配置主从服务器，具体参数参考相关文档</li>
 <li>redis在进行复制时，将擦除从服务器的所有相关数据；另外由于主服务器进行复制时将创建子线程，将大大占用内存，所以，为了防止效率低下，在内存初期配置时，最好预留一部分内存，即主服务器只是用60-70%的内存。</li>
-<li>主服务链：有时候我们可能会这样设计一个服务群，一个主服务器，和100个从服务器，但是这样是否很好？如果100台服务器同时请求复制，那么主服务器的压力将很大很大，所以，为了进一步降低服务器的压力，我们使用了服务器链（有如树结构），如下图，每一层的服务器都相当于下一层服务器的主服务器，每一个主服务器的连接点都不会太多，这样，顶端的服务器压力将会分配给下面的所有服务器。<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1530795052692.jpg" alt="enter description here"></li>
+<li>主服务链：有时候我们可能会这样设计一个服务群，一个主服务器，和100个从服务器，但是这样是否很好？如果100台服务器同时请求复制，那么主服务器的压力将很大很大，所以，为了进一步降低服务器的压力，我们使用了服务器链（有如树结构），如下图，每一层的服务器都相当于下一层服务器的主服务器，每一个主服务器的连接点都不会太多，这样，顶端的服务器压力将会分配给下面的所有服务器。<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1530795052692.jpg" alt="enter description here"></li>
 </ul>
 </li>
 <li><p>磁盘检查<br>为了验证主服务器是否已经将数据发送到从服务器，需要向主服务器发送一个唯一的虚构值，这个虚构值也将发送到从服务器，通过检查从服务器是否含有虚构值就可以判断，是否发送成功。</p>
@@ -962,11 +962,11 @@
 <p>典型算法：Prim和Kruskal</p>
 <ul>
 <li>Prim算法，请参照《算法4》p399图例<blockquote>
-<p>每次对已访问的节点所连接的外部边进行排序，找到最短的边作为下一个边，进行连接。（重点是已访问）<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525079110741.jpg" alt="prim"><br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525094329301.jpg" alt="enter description here"></p>
+<p>每次对已访问的节点所连接的外部边进行排序，找到最短的边作为下一个边，进行连接。（重点是已访问）<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525079110741.jpg" alt="prim"><br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525094329301.jpg" alt="enter description here"></p>
 </blockquote>
 </li>
 <li>Kruskal<blockquote>
-<p>与Prim算法稍微有点区别。Kruskal算法首先将所有的权重边进行排序，然后对排序的遍历连接，直到所有的边都简历连接关系。（所有的边，不仅仅是已访问）<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525079241245.jpg" alt="kuuskal"></p>
+<p>与Prim算法稍微有点区别。Kruskal算法首先将所有的权重边进行排序，然后对排序的遍历连接，直到所有的边都简历连接关系。（所有的边，不仅仅是已访问）<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525079241245.jpg" alt="kuuskal"></p>
 </blockquote>
 </li>
 </ul>
@@ -977,12 +977,12 @@
 <ul>
 <li><p>Dijkstra</p>
 <blockquote>
-<p>Dijkstra思想类似于A*算法：graph[src][d]=graph[src][v] + graph[v][d]；其中src为起点，V为已访问节点，d为待访问节点（即相邻的节点）<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525093647689.jpg" alt="Dijkstra"></p>
+<p>Dijkstra思想类似于A*算法：graph[src][d]=graph[src][v] + graph[v][d]；其中src为起点，V为已访问节点，d为待访问节点（即相邻的节点）<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525093647689.jpg" alt="Dijkstra"></p>
 </blockquote>
 </li>
 <li><p>Floyd</p>
 <blockquote>
-<p>Floyd思想类似化学催化剂原理，即Dis(i,k) + Dis(k,j) &lt; Dis(i,j)；A直接生成C成本需要100分钟，但是A生成B再生成C总成本：A到B加上B到C可能只有10+20=30分钟，所以，三次遍历整个路径，将所以可以使用催化剂缩短的路径更改，并保存最短路径队列<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1525094099021.jpg" alt="Floyd"></p>
+<p>Floyd思想类似化学催化剂原理，即Dis(i,k) + Dis(k,j) &lt; Dis(i,j)；A直接生成C成本需要100分钟，但是A生成B再生成C总成本：A到B加上B到C可能只有10+20=30分钟，所以，三次遍历整个路径，将所以可以使用催化剂缩短的路径更改，并保存最短路径队列<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1525094099021.jpg" alt="Floyd"></p>
 </blockquote>
 </li>
 <li><p>Ford</p>
@@ -1214,7 +1214,7 @@
     <content><![CDATA[<blockquote>
 <p>Fork/Join 模式类似于MapReduce，也相当于一种分而治之的理念，或者说就像二分查找、二路归并算法。通过将一个大量的计算分解为许多的小计算，分而治之，然后再合并，同时，这些分出来的每个小计算都是并行进行的，这样就大大增大了CPU的利用率。</p>
 </blockquote>
-<p>Fork/Join 模式有自己的适用范围。如果一个应用能被分解成多个子任务，并且组合多个子任务的结果就能够获得最终的答案，那么这个应用就适合用 Fork/Join 模式来解决。图 1 给出了一个 Fork/Join 模式的示意图，位于图上部的 Task 依赖于位于其下的 Task 的执行，只有当所有的子任务都完成之后，调用者才能获得 Task 0 的返回结果。可以说，Fork/Join 模式能够解决很多种类的并行问题。通过使用 Doug Lea 提供的 Fork/Join 框架，软件开发人员只需要关注任务的划分和中间结果的组合就能充分利用并行平台的优良性能。其他和并行相关的诸多难于处理的问题，例如负载平衡、同步等，都可以由框架采用统一的方式解决。这样，我们就能够轻松地获得并行的好处而避免了并行编程的困难且容易出错的缺点。<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1523368521354.jpg" alt="图 1. Fork/Join 模式示意图"></p>
+<p>Fork/Join 模式有自己的适用范围。如果一个应用能被分解成多个子任务，并且组合多个子任务的结果就能够获得最终的答案，那么这个应用就适合用 Fork/Join 模式来解决。图 1 给出了一个 Fork/Join 模式的示意图，位于图上部的 Task 依赖于位于其下的 Task 的执行，只有当所有的子任务都完成之后，调用者才能获得 Task 0 的返回结果。可以说，Fork/Join 模式能够解决很多种类的并行问题。通过使用 Doug Lea 提供的 Fork/Join 框架，软件开发人员只需要关注任务的划分和中间结果的组合就能充分利用并行平台的优良性能。其他和并行相关的诸多难于处理的问题，例如负载平衡、同步等，都可以由框架采用统一的方式解决。这样，我们就能够轻松地获得并行的好处而避免了并行编程的困难且容易出错的缺点。<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1523368521354.jpg" alt="图 1. Fork/Join 模式示意图"></p>
 <p>在多线程并发编程中，有时候会遇到将大任务分解成小任务再并发执行的场景。Java 8新增的ForkJoinPool很好的支持了这个问题。ForkJoinPool是一种支持任务分解的线程池，当提交给他的任务“过大”，他就会按照预先定义的规则将大任务分解成小任务，多线程并发执行。 一般要配合可分解任务接口ForkJoinTask来使用，ForkJoinTask有两个实现它的抽象类：RecursiveAction和RecursiveTask，其区别是前者没有返回值，后者有返回值。</p>
 <ul>
 <li><p>应用场景：<br>简单来说：如果你的问题能很容易分解成子问题，则比较适合ForkJoinPool。适合CPU密集型的场景。</p>
@@ -1321,7 +1321,7 @@
 <ul>
 <li>四、内存泄露问题<br>引起内存泄露的主要问题是由于ThreadLocalMap的key使用了对ThreadLocal的弱引用导致的。<ul>
 <li>ThreadLocalMap是使用ThreadLocal的弱引用作为Key的</li>
-<li>ThreadLocal中的引用对象如下图：<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1523352180650.jpg" alt="引用图"></li>
+<li>ThreadLocal中的引用对象如下图：<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1523352180650.jpg" alt="引用图"></li>
 <li>内存泄露问题：如图，ThreadLocalMap使用ThreadLocal的弱引用作为key，如果一个ThreadLocal没有外部强引用引用他，那么系统gc的时候，这个ThreadLocal势必会被回收，这样一来，ThreadLocalMap中就会出现key为null的Entry，就没有办法访问这些key为null的Entry的value，如果当前线程再迟迟不结束的话，这些key为null的Entry的value就会一直存在一条强引用链：<code>ThreadLocal Ref -&gt; Thread -&gt; ThreaLocalMap -&gt; Entry -&gt; value</code>永远无法回收，造成内存泄露。</li>
 </ul>
 </li>
@@ -1590,7 +1590,7 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
 </li>
 <li><p>Lock锁的认识与使用</p>
 <ul>
-<li>lock的使用类似如下：<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1523269535365.jpg" alt="lock使用"></li>
+<li>lock的使用类似如下：<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1523269535365.jpg" alt="lock使用"></li>
 <li>使用方式类似于synchronized，具有相同的互斥性和内存可见性，但是更加灵活，加锁和放锁可以由使用者自己确定</li>
 <li>优势：<ul>
 <li>synchronized锁可能出现异常而导致中断，无法释放锁，但是通过使用lock，可以直接将lock放在异常finally中，强制释放锁。<ul>
@@ -1705,7 +1705,7 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
     <title>并发编程实战1-多线程的周期、实现方式和意义</title>
     <url>/2018/04/08/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%91%A8%E6%9C%9F%E3%80%81%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%E5%92%8C%E6%84%8F%E4%B9%89/</url>
     <content><![CDATA[<p>day01:线程的周期</p>
-<p><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1523156274841.jpg" alt="线程的周期"></p>
+<p><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1523156274841.jpg" alt="线程的周期"></p>
 <p>day02:创建线程的多种方式(7中)：<br><strong>一般推荐采用Runnable接口或者Callable接口来实现多线程。</strong></p>
 <p>西红丝鸡蛋汤：</p>
 <ol>
@@ -1856,22 +1856,22 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
 <p>yum -y install memcached<br>service memcached start #启动memcached服务器</p>
 </blockquote>
 </li>
-<li>复制memcached相关的jar包到tomcat的lib下<a href="https://code.google.com/archive/p/memcached-session-manager/downloads" target="_blank" rel="noopener">下载连接</a><br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521338268310.jpg" alt="memcached相关jar包"></li>
-<li>修改tomcat标记<code>vi conf/server.xml</code><br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521338516695.jpg" alt="添加tomcat标记，用于访问标志"></li>
+<li>复制memcached相关的jar包到tomcat的lib下<a href="https://code.google.com/archive/p/memcached-session-manager/downloads" target="_blank" rel="noopener">下载连接</a><br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521338268310.jpg" alt="memcached相关jar包"></li>
+<li>修改tomcat标记<code>vi conf/server.xml</code><br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521338516695.jpg" alt="添加tomcat标记，用于访问标志"></li>
 <li>vim中的查找命令<code>/tag</code>;即命令行模式键入”/“,”tag”即为所需查找的字符串</li>
-<li>修改tomcat默认访问页面index.jsp，加入session<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521340498851.jpg" alt="修改默认界面index.jsp，添加session支持"> </li>
-<li>未添加一致行前，访问nginx时，将产生多个session<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521349650737.jpg" alt="tomcat1"><br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521342012606.jpg" alt="tomcat2"></li>
+<li>修改tomcat默认访问页面index.jsp，加入session<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521340498851.jpg" alt="修改默认界面index.jsp，添加session支持"> </li>
+<li>未添加一致行前，访问nginx时，将产生多个session<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521349650737.jpg" alt="tomcat1"><br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521342012606.jpg" alt="tomcat2"></li>
 <li>添加一致性，tomcat连接memcached，将session存入memcached<blockquote>
 <p>vi conf/context.xml</p>
 </blockquote>
 <figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">&lt;Manager className=<span class="string">"de.javakaffee.web.msm.MemcachedBackupSessionManager"</span> </span><br><span class="line">	memcachedNodes=<span class="string">"n1:192.168.116.3:11211"</span> </span><br><span class="line">    sticky=<span class="string">"false"</span> </span><br><span class="line">    lockingMode=<span class="string">"auto"</span></span><br><span class="line">    sessionBackupAsync=<span class="string">"false"</span></span><br><span class="line">	requestUriIgnorePattern=<span class="string">".*\.(ico|png|gif|jpg|css|js)$"</span></span><br><span class="line">    sessionBackupTimeout=<span class="string">"1000"</span> transcoderFactoryClass=<span class="string">"de.javakaffee.web.msm.serializer.kryo.KryoTranscoderFactory"</span> </span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
-<img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521349290610.jpg" alt="添加memcached连接"></li>
+<img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521349290610.jpg" alt="添加memcached连接"></li>
 <li>分别修改tomcat对应的index.jsp</li>
 </ul>
 <figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">&lt;%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%&gt;</span><br><span class="line">SessionID:&lt;%=session.getId()%&gt;</span><br><span class="line">&lt;br/&gt;</span><br><span class="line">SessionIP:&lt;%=request.getServerName()%&gt; </span><br><span class="line">&lt;br/&gt;</span><br><span class="line">&lt;h1&gt;tomcat2 page&lt;/h1&gt;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>重启memcached、nginx和tomcat，访问<code>192.168.116.3</code></li>
-<li>效果：sessionID不变，只是服务器页面变化<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521349570726.jpg" alt="tomcat1"><br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521349582665.jpg" alt="tomcat2"></li>
+<li>效果：sessionID不变，只是服务器页面变化<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521349570726.jpg" alt="tomcat1"><br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521349582665.jpg" alt="tomcat2"></li>
 </ul>
 <p><strong>注意事项：过程中可能存在各种各样的问题，导致错误。如复制空格问题。当实在无法找到错误原因时，可以文件整体还原，在修改，因为有时候可能是自己错误修改了文件，但是找不到地址了</strong></p>
 <hr>
@@ -1885,7 +1885,7 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
 </ul>
 <figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">CentOS默认的安装源在官方的centos.org上，而redis在第三方的yum源里，因此无法安装。这就是我们常常在yum源里找不到各种软件的原因，还需要自己去wget，然后configure,make,make install，这个过程太痛苦了，并且卸载软件的时候还容易出错。</span><br><span class="line">非官方的yum推荐用fedora的epel仓库。epel (Extra Packages <span class="keyword">for</span> Enterprise Linux)是基于Fedora的一个项目，该仓库下有非常多的软件，建议安装。yum添加epel源的命令为：yum install epel-release然后回车。安装完后，我们使用命令：yum repolist查看。然后重新安装redis</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p>导入相关的redis-tomcat的jar包到tomcat中（下载链接同上）<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521382915270.jpg" alt="三个依赖jar包"></p>
+<li><p>导入相关的redis-tomcat的jar包到tomcat中（下载链接同上）<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521382915270.jpg" alt="三个依赖jar包"></p>
 </li>
 <li><p>检测是否安装正确</p>
 <blockquote>
@@ -1894,7 +1894,7 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
 </li>
 <li><p>修改redis相关配置<code>vi /etc/redis.conf</code>，将bind的127.0.0.1修改为本机地址，否则只能本机访问了。会出现各种错误！</p>
 <blockquote>
-<p>另外注意：修改的bind为第二个不是第一个！<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521446257269.jpg" alt="不是这里的"><br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521446313973.jpg" alt="而是这里"></p>
+<p>另外注意：修改的bind为第二个不是第一个！<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521446257269.jpg" alt="不是这里的"><br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521446313973.jpg" alt="而是这里"></p>
 </blockquote>
 </li>
 <li><p>添加redis配置到tomcat中，同memcached一样</p>
@@ -1902,7 +1902,7 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
 </ul>
 <figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">&lt;Valve className=<span class="string">"com.orangefunction.tomcat.redissessions.RedisSessionHandlerValve"</span> /&gt;</span><br><span class="line">&lt;Manager className=<span class="string">"com.orangefunction.tomcat.redissessions.RedisSessionManager"</span></span><br><span class="line">         host=<span class="string">"192.168.116.3"</span></span><br><span class="line">         port=<span class="string">"6379"</span></span><br><span class="line">         database=<span class="string">"0"</span></span><br><span class="line">         maxInactiveInterval=<span class="string">"60"</span> /&gt;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>测试效果<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521446558722.jpg" alt="tomcat1"><br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1521446569528.jpg" alt="tomcat2"></li>
+<li>测试效果<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521446558722.jpg" alt="tomcat1"><br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521446569528.jpg" alt="tomcat2"></li>
 </ul>
 ]]></content>
       <categories>

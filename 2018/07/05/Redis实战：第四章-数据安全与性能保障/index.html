@@ -119,16 +119,16 @@
 <meta property="og:url" content="https://purice93.github.io/2018/07/05/Redis%E5%AE%9E%E6%88%98%EF%BC%9A%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BF%9D%E9%9A%9C/index.html">
 <meta property="og:site_name" content="随风而行">
 <meta property="og:description" content="redis不提供严格的锁机制，即不保证数据的完全正确性，所以需要用户自己去严格检查。为了保证数据的安全，需要将数据及时的存储到硬盘上，redis提供两种持久化的方式：快照-批量写入；追加-单条追加。另外为了保证数据库的安全，防止数据丢失和为了负载均衡，redis也提供了分布式情况下的复制策略，可以对多个服务器数据进行同步。另外，根据不同的场景，我们需要合理的判断形势，在性能和安全上达到一个平衡，">
-<meta property="og:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1530795052692.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1530795052692.jpg">
 <meta property="article:published_time" content="2018-07-05T13:27:46.000Z">
-<meta property="article:modified_time" content="2020-01-09T07:46:52.722Z">
+<meta property="article:modified_time" content="2020-01-09T13:30:51.213Z">
 <meta property="article:author" content="soundslow">
 <meta property="article:tag" content="事务">
 <meta property="article:tag" content="持久化">
 <meta property="article:tag" content="RDB">
 <meta property="article:tag" content="AOF">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1530795052692.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1530795052692.jpg">
 
 
 
@@ -503,7 +503,7 @@
 <ul>
 <li>redis的复制功能需要配置主从服务器，具体参数参考相关文档</li>
 <li>redis在进行复制时，将擦除从服务器的所有相关数据；另外由于主服务器进行复制时将创建子线程，将大大占用内存，所以，为了防止效率低下，在内存初期配置时，最好预留一部分内存，即主服务器只是用60-70%的内存。</li>
-<li>主服务链：有时候我们可能会这样设计一个服务群，一个主服务器，和100个从服务器，但是这样是否很好？如果100台服务器同时请求复制，那么主服务器的压力将很大很大，所以，为了进一步降低服务器的压力，我们使用了服务器链（有如树结构），如下图，每一层的服务器都相当于下一层服务器的主服务器，每一个主服务器的连接点都不会太多，这样，顶端的服务器压力将会分配给下面的所有服务器。<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1530795052692.jpg" alt="enter description here"></li>
+<li>主服务链：有时候我们可能会这样设计一个服务群，一个主服务器，和100个从服务器，但是这样是否很好？如果100台服务器同时请求复制，那么主服务器的压力将很大很大，所以，为了进一步降低服务器的压力，我们使用了服务器链（有如树结构），如下图，每一层的服务器都相当于下一层服务器的主服务器，每一个主服务器的连接点都不会太多，这样，顶端的服务器压力将会分配给下面的所有服务器。<br><img src="https://raw.githubusercontent.com/purice93/xiaoshujiang/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1530795052692.jpg" alt="enter description here"></li>
 </ul>
 </li>
 <li><p>磁盘检查<br>为了验证主服务器是否已经将数据发送到从服务器，需要向主服务器发送一个唯一的虚构值，这个虚构值也将发送到从服务器，通过检查从服务器是否含有虚构值就可以判断，是否发送成功。</p>
