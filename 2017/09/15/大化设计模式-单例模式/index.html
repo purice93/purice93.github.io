@@ -85,16 +85,16 @@
 <link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/image/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/image/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="16x16" href="/image/favicon-16x16-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+  <link rel="mask-icon" href="/image/logo.svg?v=5.1.4" color="#222">
 
 
 
@@ -113,19 +113,19 @@
 
 
 
-<meta name="description" content="原理：保证一个类只有一个实例对象，提供一个对外的实例创建方法。    好处：   数据共享，多个线程可以共用一个实例，共同享用这个实例的资源属性（如数据库连接器） 线程安全，通过线程加锁，可以达到并发访问的目的 节约资源，防止创建过多不必要的对象    结构图    分类   懒汉式：实例化调用时才实例化，否则就不实例化  1234567891011121314&#x2F;&#x2F;懒汉式  class Sing">
+<meta name="description" content="原理：保证一个类只有一个实例对象，提供一个对外的实例创建方法。    好处：   数据共享，多个线程可以共用一个实例，共同享用这个实例的资源属性（如数据库连接器） 线程安全，通过线程加锁，可以达到并发访问的目的 节约资源，防止创建过多不必要的对象    结构图![enter description here][1]    分类   懒汉式：实例化调用时才实例化，否则就不实例化  12345678">
 <meta property="og:type" content="article">
 <meta property="og:title" content="大化设计模式-单例模式">
 <meta property="og:url" content="https://purice93.github.io/2017/09/15/%E5%A4%A7%E5%8C%96%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="随风而行">
-<meta property="og:description" content="原理：保证一个类只有一个实例对象，提供一个对外的实例创建方法。    好处：   数据共享，多个线程可以共用一个实例，共同享用这个实例的资源属性（如数据库连接器） 线程安全，通过线程加锁，可以达到并发访问的目的 节约资源，防止创建过多不必要的对象    结构图    分类   懒汉式：实例化调用时才实例化，否则就不实例化  1234567891011121314&#x2F;&#x2F;懒汉式  class Sing">
-<meta property="og:image" content="https://purice93.github.io/2017/09/15/%E5%A4%A7%E5%8C%96%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/images/1505455194462.jpg">
+<meta property="og:description" content="原理：保证一个类只有一个实例对象，提供一个对外的实例创建方法。    好处：   数据共享，多个线程可以共用一个实例，共同享用这个实例的资源属性（如数据库连接器） 线程安全，通过线程加锁，可以达到并发访问的目的 节约资源，防止创建过多不必要的对象    结构图![enter description here][1]    分类   懒汉式：实例化调用时才实例化，否则就不实例化  12345678">
+<meta property="og:image" content="https://purice93.github.io/2017/09/15/%E5%A4%A7%E5%8C%96%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/image/1505455194462.jpg">
 <meta property="article:published_time" content="2017-09-15T06:21:42.000Z">
-<meta property="article:modified_time" content="2020-01-08T03:48:22.127Z">
+<meta property="article:modified_time" content="2020-01-09T09:53:44.079Z">
 <meta property="article:author" content="soundslow">
 <meta property="article:tag" content="单例模式">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://purice93.github.io/2017/09/15/%E5%A4%A7%E5%8C%96%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/images/1505455194462.jpg">
+<meta name="twitter:image" content="https://purice93.github.io/2017/09/15/%E5%A4%A7%E5%8C%96%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/image/1505455194462.jpg">
 
 
 
@@ -347,7 +347,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="soundslow">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/default_avatar.jpg">
+      <meta itemprop="image" content="/image/default_avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -430,7 +430,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  310
+                  314
                 </span>
               
 
@@ -481,7 +481,7 @@
 </ol>
 <hr>
 <ul>
-<li><strong>结构图</strong><br><img src="./images/1505455194462.jpg" alt="enter description here"></li>
+<li><strong>结构图</strong><br>![enter description here][1]</li>
 </ul>
 <hr>
 <ul>
@@ -500,6 +500,7 @@
 </ol>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//饿汉式  </span></span><br><span class="line">public sealed class Singleton &#123;  </span><br><span class="line">    <span class="comment">// 通过static final修饰，进行初始化加载，同时无法更改</span></span><br><span class="line">    private static final Singleton instance = new Singleton();  </span><br><span class="line">    private Singleton() &#123;</span><br><span class="line">    &#125;  </span><br><span class="line">   </span><br><span class="line">    public static Singleton GetInstance()&#123;  </span><br><span class="line">        return instance;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
+<p>  <img src="./image/1505455194462.jpg" alt=""></p>
 
       
     </div>
@@ -520,14 +521,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="soundslow 微信支付"/>
+        <img id="wechat_qr" src="/image/wechatpay.jpg" alt="soundslow 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/images/alipay.jpg" alt="soundslow 支付宝"/>
+        <img id="alipay_qr" src="/image/alipay.jpg" alt="soundslow 支付宝"/>
         <p>支付宝</p>
       </div>
     
@@ -632,7 +633,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="/images/default_avatar.jpg"
+                src="/image/default_avatar.jpg"
                 alt="soundslow" />
             
               <p class="site-author-name" itemprop="name">soundslow</p>
@@ -646,7 +647,7 @@
               
                 <a href="/archives/%7C%7C%20archive%20%20%20%20%20%20%20%20%20%20/%E5%BD%92%E6%A1%A3">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">42</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -657,7 +658,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -668,7 +669,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-count">101</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -796,7 +797,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共71.1k字</span>
+  <span class="post-count">博客全站共85.6k字</span>
 </div>
         
 

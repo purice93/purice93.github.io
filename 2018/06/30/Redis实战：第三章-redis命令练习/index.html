@@ -85,22 +85,22 @@
 <link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/image/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/image/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="16x16" href="/image/favicon-16x16-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+  <link rel="mask-icon" href="/image/logo.svg?v=5.1.4" color="#222">
 
 
 
 
 
-  <meta name="keywords" content="," />
+  <meta name="keywords" content="redis," />
 
 
 
@@ -114,9 +114,9 @@
 
 
 <meta name="description" content="redis有5种数据结构，分别为字符串、列表、集合、散列、有序集合；相当于java中的String、list、set、hashmap、sortset(z)；另外redis不仅仅只有有序集合提供排序，对于另外四种结构，redis还提供了sort命令，可以更具指定的格式进行排序；redis也支持事务处理、发布和订阅功能，并且可以设置过期时间。  123456789101112131415161718">
-<meta property="og:type" content="website">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Redis实战：第三章-redis命令练习">
-<meta property="og:url" content="https://purice93.github.io/Redis%E5%AE%9E%E6%88%98%EF%BC%9A%E7%AC%AC%E4%B8%89%E7%AB%A0-redis%E5%91%BD%E4%BB%A4%E7%BB%83%E4%B9%A0.html">
+<meta property="og:url" content="https://purice93.github.io/2018/06/30/Redis%E5%AE%9E%E6%88%98%EF%BC%9A%E7%AC%AC%E4%B8%89%E7%AB%A0-redis%E5%91%BD%E4%BB%A4%E7%BB%83%E4%B9%A0/index.html">
 <meta property="og:site_name" content="随风而行">
 <meta property="og:description" content="redis有5种数据结构，分别为字符串、列表、集合、散列、有序集合；相当于java中的String、list、set、hashmap、sortset(z)；另外redis不仅仅只有有序集合提供排序，对于另外四种结构，redis还提供了sort命令，可以更具指定的格式进行排序；redis也支持事务处理、发布和订阅功能，并且可以设置过期时间。  123456789101112131415161718">
 <meta property="article:published_time" content="2018-06-30T10:55:58.000Z">
@@ -153,7 +153,7 @@
 
 
 
-  <link rel="canonical" href="https://purice93.github.io/Redis实战：第三章-redis命令练习.html"/>
+  <link rel="canonical" href="https://purice93.github.io/2018/06/30/Redis实战：第三章-redis命令练习/"/>
 
 
 
@@ -328,39 +328,240 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://purice93.github.io/2018/06/30/Redis%E5%AE%9E%E6%88%98%EF%BC%9A%E7%AC%AC%E4%B8%89%E7%AB%A0-redis%E5%91%BD%E4%BB%A4%E7%BB%83%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="soundslow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/image/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="随风而行">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">Redis实战：第三章-redis命令练习</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <blockquote>
+          <h1 class="post-title" itemprop="name headline">Redis实战：第三章-redis命令练习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-30T18:55:58+08:00">
+                2018-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span id="busuanzi_value_page_pv"></span>次阅读
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
 <p>redis有5种数据结构，分别为字符串、列表、集合、散列、有序集合；相当于java中的String、list、set、hashmap、sortset(z)；另外redis不仅仅只有有序集合提供排序，对于另外四种结构，redis还提供了sort命令，可以更具指定的格式进行排序；redis也支持事务处理、发布和订阅功能，并且可以设置过期时间。</p>
 </blockquote>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br></pre></td><td class="code"><pre><span class="line">import redis.clients.jedis.Jedis;</span><br><span class="line">import redis.clients.jedis.JedisPubSub;</span><br><span class="line">import redis.clients.jedis.Pipeline;</span><br><span class="line">import redis.clients.jedis.Response;</span><br><span class="line">import redis.clients.jedis.SortingParams;</span><br><span class="line">import redis.clients.jedis.ZParams;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.Set;</span><br><span class="line">import java.util.concurrent.ExecutorService;</span><br><span class="line">import java.util.concurrent.SynchronousQueue;</span><br><span class="line">import java.util.concurrent.ThreadPoolExecutor;</span><br><span class="line">import java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @author: ZouTai</span></span><br><span class="line"><span class="comment"> * @date: 2018/6/29</span></span><br><span class="line"><span class="comment"> * @description: Redis命令</span></span><br><span class="line"><span class="comment"> * @create: 2018-06-29 09:05</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public class Chapter03 &#123;</span><br><span class="line">    public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        new Chapter03().run();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void run() throws InterruptedException &#123;</span><br><span class="line">        Jedis conn = new Jedis("localhost");</span><br><span class="line">        conn.select(15);</span><br><span class="line"></span><br><span class="line">        testString(conn);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void testString(final Jedis conn) throws InterruptedException &#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 1.1 字符串简单操作</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">//conn.set("key","0");</span></span><br><span class="line">        conn.del("key"); // 删除数据</span><br><span class="line">        String value = conn.get("key"); // 获取值</span><br><span class="line">        long number = conn.incr("key"); // 自增1，并获取最新值</span><br><span class="line">        conn.incrBy("key", 10); // 增加指定值</span><br><span class="line">        conn.set("key", "15"); // 设置值</span><br><span class="line">        conn.incr("key"); // 自增1</span><br><span class="line">        assert number == 1;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        long len = conn.append("key", "hello");</span><br><span class="line">        value = conn.get("key");</span><br><span class="line">        conn.substr("key", 0, 3);</span><br><span class="line">        conn.setrange("key", 5, "world"); // 从偏移量开始的值设置为指定值</span><br><span class="line">        conn.setbit("key2", 2, "1");</span><br><span class="line">        conn.setbit("key2", 7, "1");</span><br><span class="line">        value = conn.get("key2");</span><br><span class="line">        <span class="comment">// "!"的编码为33，即0100001</span></span><br><span class="line">        System.out.println(value);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 2、列表操作</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        len = conn.rpush("list-key", "last");</span><br><span class="line">        len = conn.lpush("list-key", "first");</span><br><span class="line">        conn.lpush("list-key", "new list");</span><br><span class="line">        List&lt;String&gt; arr = conn.lrange("list-key", 0, -1);</span><br><span class="line">        value = conn.lpop("list-key");</span><br><span class="line">        value = conn.rpop("list-key");</span><br><span class="line">        conn.rpush("list-key", "a", "b", "c");</span><br><span class="line">        conn.ltrim("list-key", 2, -1); // 截取指定片段，包含偏移量</span><br><span class="line">        arr = conn.lrange("list-key", 0, -1);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.2 列表阻塞操作</span></span><br><span class="line">        conn.del("list");</span><br><span class="line">        conn.del("list2");</span><br><span class="line">        conn.rpush("list", "item1");</span><br><span class="line">        conn.rpush("list", "item2");</span><br><span class="line">        conn.rpush("list2", "item3");</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 超时参数 timeout 接受一个以秒为单位的数字作为值。</span></span><br><span class="line">        <span class="comment">// 超时参数设为 0 表示阻塞时间可以无限期延长(block indefinitely) 。</span></span><br><span class="line">        conn.brpoplpush("list2", "list", 1);</span><br><span class="line">        arr = conn.lrange("list", 0, -1);</span><br><span class="line">        System.out.println(arr); // [item3, item1, item2]</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 若list2为null，则返回null</span></span><br><span class="line">        value = conn.brpoplpush("list2", "list", 1);</span><br><span class="line">        assert value == null;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 从左向右检查所有列表，每次返回一个元素</span></span><br><span class="line">        arr = conn.blpop(1, "list", "list2");</span><br><span class="line">        System.out.println(arr); // [list, item3]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 3、集合</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        long isOk = 0;</span><br><span class="line">        boolean success = false;</span><br><span class="line">        Long count = 0L;</span><br><span class="line">        conn.sadd("set-key", "a", "b", "c");</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 移除包含的元素，成功则返回1；如果一个没有，则返回0</span></span><br><span class="line">        conn.srem("set-key", "c", "d");</span><br><span class="line">        isOk = conn.srem("set-key", "c");</span><br><span class="line">        count = conn.scard("set-key"); // 返回集合数量</span><br><span class="line">        Set&lt;String&gt; sets = conn.smembers("set-key");</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 转移元素</span></span><br><span class="line">        conn.smove("set-key", "set-key2", "a");</span><br><span class="line">        System.out.println(conn.smembers("set-key2"));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.1 组合和关联集合</span></span><br><span class="line">        conn.sadd("skey1", "a", "b", "c", "d");</span><br><span class="line">        conn.sadd("skey2", "c", "d", "e", "f");</span><br><span class="line">        sets = conn.sdiff("skey1", "skey2");// 1中有，2中没有</span><br><span class="line">        sets = conn.sinter("skey1", "skey2"); // 交集</span><br><span class="line">        sets = conn.sunion("skey1", "skey2"); // 并集</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 4、散列</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        conn.hmset(<span class="string">"hash-key"</span>, new HashMap&lt;String, String&gt;() &#123;</span><br><span class="line">            &#123;</span><br><span class="line">                put("k1", "v1");</span><br><span class="line">                put("k2", "v2");</span><br><span class="line">                put("k3", "v3");</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        arr = conn.hmget("hash-key", "k1", "k2");</span><br><span class="line">        len = conn.hlen("hash-key");</span><br><span class="line">        isOk = conn.hdel("hash-key", "k1"); // 返回0-1</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4.2 批量操作</span></span><br><span class="line">        final StringBuffer lStr = new StringBuffer();</span><br><span class="line">        for (int i = 0; i &lt; 1000; i++) &#123;</span><br><span class="line">            lStr.append("a");</span><br><span class="line">        &#125;</span><br><span class="line">        conn.hmset(<span class="string">"hash-key2"</span>, new HashMap&lt;String, String&gt;() &#123;</span><br><span class="line">            &#123;</span><br><span class="line">                put("short", "hello");</span><br><span class="line">                put("long", lStr.toString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        conn.hkeys("hash-key2");</span><br><span class="line">        conn.hexists("hash-key2", "short");</span><br><span class="line">        conn.hincrBy("hash-key2", "num", 1);</span><br><span class="line">        conn.hexists("hash-key2", "num");</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 5、有序集合</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        conn.zadd(<span class="string">"zset-key"</span>, new HashMap&lt;String, Double&gt;() &#123;</span><br><span class="line">            &#123;</span><br><span class="line">                put("a", 3.0);</span><br><span class="line">                put("b", 2.0);</span><br><span class="line">                put("c", 1.0);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        double num = 0;</span><br><span class="line">        len = conn.zcard("zset-key");</span><br><span class="line">        num = conn.zincrby("zset-key", 3, "c");</span><br><span class="line">        num = conn.zscore("zset-key", "b");</span><br><span class="line">        num = conn.zrank("zset-key", "a");</span><br><span class="line">        num = conn.zcount("zset-key", 0, 3); // 指定分数内的数量</span><br><span class="line"></span><br><span class="line">        isOk = conn.zrem("zset-key", "c");</span><br><span class="line">        sets = conn.zrangeByScore("zset-key", 0, -1);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5.2 交集和并集</span></span><br><span class="line"></span><br><span class="line">        conn.zadd(<span class="string">"zset1"</span>, new HashMap&lt;String, Double&gt;() &#123;</span><br><span class="line">            &#123;</span><br><span class="line">                put("a", 3.0);</span><br><span class="line">                put("b", 2.0);</span><br><span class="line">                put("c", 1.0);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        conn.zadd(<span class="string">"zset2"</span>, new HashMap&lt;String, Double&gt;() &#123;</span><br><span class="line">            &#123;</span><br><span class="line">                put("b", 4.0);</span><br><span class="line">                put("c", 5.0);</span><br><span class="line">                put("d", 6.0);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        isOk = conn.zinterstore("zsetI", "zset1", "zset2");</span><br><span class="line">        sets = conn.zrange("zsetI", 0, -1);</span><br><span class="line"></span><br><span class="line">        isOk = conn.zunionstore("zsetU", "zset1", "zset2");</span><br><span class="line">        sets = conn.zrange("zsetU", 0, -1);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置为取最小数，而不是相加</span></span><br><span class="line">        ZParams zParams = new ZParams();</span><br><span class="line">        zParams.aggregate(ZParams.Aggregate.MIN);</span><br><span class="line">        isOk = conn.zunionstore("zsetU0", zParams, "zset1", "zset2");</span><br><span class="line">        sets = conn.zrange("zsetU0", 0, -1);</span><br><span class="line"></span><br><span class="line">        conn.zadd(<span class="string">"zset3"</span>, new HashMap&lt;String, Double&gt;() &#123;</span><br><span class="line">            &#123;</span><br><span class="line">                put("e", 11.0);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        isOk = conn.zunionstore("zsetU2", "zset1", "zset2", "zset3");</span><br><span class="line">        sets = conn.zrange("zsetU2", 0, -1);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 6、发布和订阅</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        runPubsub(conn);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 7、排序：sort命令</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        conn.rpush("sort-input", "23", "15", "110", "7");</span><br><span class="line">        arr = conn.sort("sort-input");</span><br><span class="line">        arr = conn.sort("sort-input", new SortingParams().alpha());</span><br><span class="line">        conn.hset("d-7", "field", "5");</span><br><span class="line">        conn.hset("d-15", "field", "1");</span><br><span class="line">        conn.hset("d-23", "field", "9");</span><br><span class="line">        conn.hset("d-110", "field", "3");</span><br><span class="line">        arr = conn.sort("sort-input", new SortingParams().by("d-*-&gt;field"));</span><br><span class="line">        SortingParams sps = new SortingParams();</span><br><span class="line">        sps.by("d-*-&gt;field");</span><br><span class="line">        sps.get("d-*-&gt;field");</span><br><span class="line">        arr = conn.sort("sort-input", sps);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 7、事务处理</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        conn.del("notrans");</span><br><span class="line">        conn.del("trans");</span><br><span class="line">        System.out.println("7、事务处理：");</span><br><span class="line">        ExecutorService singleThreadPool = new ThreadPoolExecutor(6, 10, 5, TimeUnit.SECONDS, new SynchronousQueue&lt;Runnable&gt;());</span><br><span class="line">        Runnable noTRunnable = new Runnable() &#123;</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                System.out.println(conn.incr("notrans"));</span><br><span class="line">                try &#123;</span><br><span class="line">                    Thread.sleep(1);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line"><span class="comment">//                System.out.println(conn.incrBy("notrans", -1)); 报线程安全错误</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        Runnable TRunnable = new Runnable() &#123;</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                <span class="comment">// 为什么要新建连接？？</span></span><br><span class="line">                Jedis conn = new Jedis("localhost");</span><br><span class="line">                conn.select(15);</span><br><span class="line"></span><br><span class="line">                Pipeline pipeline = conn.pipelined();</span><br><span class="line">                pipeline.multi();//开启事务</span><br><span class="line">                pipeline.incr("trans"); // 步骤1</span><br><span class="line">                try &#123;</span><br><span class="line">                    Thread.sleep(1);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                pipeline.incrBy("trans", -1);// 步骤2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * 这里需要注意，pipeline.exec()结果保存了每一步的数据，所以输出会有两个值，</span></span><br><span class="line"><span class="comment">                 * 分别为步骤1和步骤2的结果</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                Response&lt;List&lt;Object&gt;&gt; txresult = pipeline.exec();//提交事务</span><br><span class="line">                pipeline.sync();//关闭pipeline</span><br><span class="line">                <span class="comment">//结束pipeline，并开始从相应中获得数据</span></span><br><span class="line">                List&lt;Object&gt; responses = txresult.get();</span><br><span class="line">                if (responses == null || responses.isEmpty()) &#123;</span><br><span class="line">                    throw new RuntimeException("Pipeline error: no response...");</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 只输出最总的结果</span></span><br><span class="line">                System.out.println(responses.get(responses.size() - 1));</span><br><span class="line"><span class="comment">//                for(Object resp : responses)&#123;</span></span><br><span class="line"><span class="comment">//                    System.out.println("Response:" + resp.toString());//注意，此处resp的类型为Long</span></span><br><span class="line"><span class="comment">//                &#125;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        System.out.println("不使用事务：");</span><br><span class="line">        for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">            singleThreadPool.execute(noTRunnable);</span><br><span class="line">        &#125;</span><br><span class="line">        Thread.sleep(5);</span><br><span class="line">        System.out.println("-----------");</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Thread.sleep(10);</span><br><span class="line">        System.out.println("使用事务：");</span><br><span class="line">        for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">            singleThreadPool.execute(TRunnable);</span><br><span class="line">        &#125;</span><br><span class="line">        Thread.sleep(5);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 8、为键设置过期时间</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        conn.set("key", "value");</span><br><span class="line">        value = conn.get("key");</span><br><span class="line">        conn.expire("key", 2);</span><br><span class="line">        Thread.sleep(2);</span><br><span class="line">        value = conn.get("key");</span><br><span class="line"></span><br><span class="line">        conn.set("key2", "value2");</span><br><span class="line">        conn.expire("key2", 100);// 注意sleep时间为millis不是second</span><br><span class="line">        Thread.sleep(3000);</span><br><span class="line">        long time = conn.ttl("key2"); // 查看还有多久过期</span><br><span class="line">        System.out.println("过期时间还剩：" + time);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void runPubsub(final Jedis conn) throws InterruptedException &#123;</span><br><span class="line">        <span class="comment">// 建议使用线程池</span></span><br><span class="line">        ExecutorService singleThreadPool = new ThreadPoolExecutor(6, 10, 5, TimeUnit.SECONDS, new SynchronousQueue&lt;Runnable&gt;());</span><br><span class="line">        Runnable myRunnable = new Runnable() &#123;</span><br><span class="line">            Jedis conn1 = new Jedis();</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    Thread.sleep(10);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">                    conn1.publish("channel", String.valueOf(i));</span><br><span class="line">                    try &#123;</span><br><span class="line">                        Thread.sleep(1);</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        singleThreadPool.execute(myRunnable);</span><br><span class="line">        JedisPubSub pubSub = new JedisPubSub() &#123;</span><br><span class="line">            int count = 0;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onMessage(String channel, String message) &#123;</span><br><span class="line">                count++;</span><br><span class="line">                System.out.println("channel:" + channel + "---" + "receives message :" + message);</span><br><span class="line">                <span class="comment">// 收取两个信息后，关闭订阅</span></span><br><span class="line">                <span class="keyword">if</span> (count == <span class="number">2</span>) &#123;</span><br><span class="line">                    unsubscribe(); // 内部会自动调用onUnsubscribe函数</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//this.unsubscribe();//取消订阅</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onSubscribe(String channel, int subscribedChannels) &#123;</span><br><span class="line">                System.out.println("channel:" + channel + "---" + "is been subscribed:" + subscribedChannels);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onUnsubscribe(String channel, int subscribedChannels) &#123;</span><br><span class="line">                System.out.println("channel:" + channel + "---" + "is been unsubscribed:" + subscribedChannels);</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        conn.subscribe(pubSub, "channel");</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-        
-      </div>
-      
-      
       
     </div>
     
     
     
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/image/wechatpay.jpg" alt="soundslow 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/image/alipay.jpg" alt="soundslow 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"><i class="fa fa-tag"></i> redis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/30/Redis%E5%AE%9E%E6%88%98%EF%BC%9A%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E4%BD%BF%E7%94%A8redis%E6%9E%84%E5%BB%BAweb%E5%BA%94%E7%94%A8/" rel="next" title="Redis实战：第二章-使用redis构建web应用">
+                <i class="fa fa-chevron-left"></i> Redis实战：第二章-使用redis构建web应用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/05/Redis%E5%AE%9E%E6%88%98%EF%BC%9A%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BF%9D%E9%9A%9C/" rel="prev" title="Redis实战：第四章-数据安全与性能保障">
+                Redis实战：第四章-数据安全与性能保障 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -402,7 +603,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="/images/default_avatar.jpg"
+                src="/image/default_avatar.jpg"
                 alt="soundslow" />
             
               <p class="site-author-name" itemprop="name">soundslow</p>
@@ -416,7 +617,7 @@
               
                 <a href="/archives/%7C%7C%20archive%20%20%20%20%20%20%20%20%20%20/%E5%BD%92%E6%A1%A3">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">42</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -427,7 +628,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -438,7 +639,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-count">101</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -566,7 +767,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共71.1k字</span>
+  <span class="post-count">博客全站共85.6k字</span>
 </div>
         
 

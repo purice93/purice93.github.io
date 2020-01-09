@@ -85,22 +85,22 @@
 <link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/image/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/image/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="16x16" href="/image/favicon-16x16-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+  <link rel="mask-icon" href="/image/logo.svg?v=5.1.4" color="#222">
 
 
 
 
 
-  <meta name="keywords" content=",," />
+  <meta name="keywords" content="redis,缓存," />
 
 
 
@@ -114,16 +114,16 @@
 
 
 <meta name="description" content="redis全称REmote DIctionary Server，即远程字典服务，是一个由Salvatore Sanfilippo写的key-value存储系统。Redis是一个开源的使用ANSI C语言编写、遵守BSD协议、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。它通常被称为数据结构服务器，因为值（value）可以是 字符串(String), 哈">
-<meta property="og:type" content="website">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Redis实战：第一章-初识Redis案例-文章投票">
-<meta property="og:url" content="https://purice93.github.io/Redis%E5%AE%9E%E6%88%98%EF%BC%9A%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%88%9D%E8%AF%86Redis%E6%A1%88%E4%BE%8B-%E6%96%87%E7%AB%A0%E6%8A%95%E7%A5%A8.html">
+<meta property="og:url" content="https://purice93.github.io/2018/06/30/Redis%E5%AE%9E%E6%88%98%EF%BC%9A%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%88%9D%E8%AF%86Redis%E6%A1%88%E4%BE%8B-%E6%96%87%E7%AB%A0%E6%8A%95%E7%A5%A8/index.html">
 <meta property="og:site_name" content="随风而行">
 <meta property="og:description" content="redis全称REmote DIctionary Server，即远程字典服务，是一个由Salvatore Sanfilippo写的key-value存储系统。Redis是一个开源的使用ANSI C语言编写、遵守BSD协议、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。它通常被称为数据结构服务器，因为值（value）可以是 字符串(String), 哈">
 <meta property="article:published_time" content="2018-06-30T10:54:52.000Z">
 <meta property="article:modified_time" content="2020-01-09T07:45:27.652Z">
 <meta property="article:author" content="soundslow">
-<meta property="article:tag" content="缓存">
 <meta property="article:tag" content="redis">
+<meta property="article:tag" content="缓存">
 <meta name="twitter:card" content="summary">
 
 
@@ -154,7 +154,7 @@
 
 
 
-  <link rel="canonical" href="https://purice93.github.io/Redis实战：第一章-初识Redis案例-文章投票.html"/>
+  <link rel="canonical" href="https://purice93.github.io/2018/06/30/Redis实战：第一章-初识Redis案例-文章投票/"/>
 
 
 
@@ -329,24 +329,144 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://purice93.github.io/2018/06/30/Redis%E5%AE%9E%E6%88%98%EF%BC%9A%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%88%9D%E8%AF%86Redis%E6%A1%88%E4%BE%8B-%E6%96%87%E7%AB%A0%E6%8A%95%E7%A5%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="soundslow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/image/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="随风而行">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">Redis实战：第一章-初识Redis案例-文章投票</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <blockquote>
+          <h1 class="post-title" itemprop="name headline">Redis实战：第一章-初识Redis案例-文章投票</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-30T18:54:52+08:00">
+                2018-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span id="busuanzi_value_page_pv"></span>次阅读
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
 <p>redis全称REmote DIctionary Server，即远程字典服务，是一个由Salvatore Sanfilippo写的key-value存储系统。Redis是一个开源的使用ANSI C语言编写、遵守BSD协议、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。它通常被称为数据结构服务器，因为值（value）可以是 字符串(String), 哈希(Map), 列表(list), 集合(sets) 和 有序集合(sorted sets)等类型。<br>redis是NoSQL数据库，相对于其他数据库所不同的是，redis并不使用表结构，即并不会提前设计或建立表，而是在使用的时候，直接附带存储结构名。（一般都是字符串，在之后的几章中，为了方便描述，暂时称这种名也为表）</p>
 </blockquote>
 <p>redis特点和应用场景参考博客：<a href="https://www.jianshu.com/p/238372c25669" target="_blank" rel="noopener">六尺帐篷</a><br>redis参考文档：<a href="http://redisdoc.com/index.html" target="_blank" rel="noopener">http://redisdoc.com/index.html</a><br><strong>我理解的优势：</strong></p>
@@ -374,15 +494,98 @@
 
 
 
-        
-      </div>
-      
-      
       
     </div>
     
     
     
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/image/wechatpay.jpg" alt="soundslow 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/image/alipay.jpg" alt="soundslow 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"><i class="fa fa-tag"></i> redis</a>
+          
+            <a href="/tags/%E7%BC%93%E5%AD%98/" rel="tag"><i class="fa fa-tag"></i> 缓存</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/30/%E5%9B%BE%E7%AE%97%E6%B3%95-Prim%E3%80%81Kruskal%E3%80%81Dijkstra%E3%80%81Floyd%E3%80%81Bellman/" rel="next" title="图算法-Prim、Kruskal、Dijkstra、Floyd、Bellman">
+                <i class="fa fa-chevron-left"></i> 图算法-Prim、Kruskal、Dijkstra、Floyd、Bellman
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/30/Redis%E5%AE%9E%E6%88%98%EF%BC%9A%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E4%BD%BF%E7%94%A8redis%E6%9E%84%E5%BB%BAweb%E5%BA%94%E7%94%A8/" rel="prev" title="Redis实战：第二章-使用redis构建web应用">
+                Redis实战：第二章-使用redis构建web应用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -424,7 +627,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="/images/default_avatar.jpg"
+                src="/image/default_avatar.jpg"
                 alt="soundslow" />
             
               <p class="site-author-name" itemprop="name">soundslow</p>
@@ -438,7 +641,7 @@
               
                 <a href="/archives/%7C%7C%20archive%20%20%20%20%20%20%20%20%20%20/%E5%BD%92%E6%A1%A3">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">42</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -449,7 +652,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -460,7 +663,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-count">101</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -588,7 +791,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共71.1k字</span>
+  <span class="post-count">博客全站共85.6k字</span>
 </div>
         
 

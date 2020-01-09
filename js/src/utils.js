@@ -2,7 +2,7 @@
 
 NexT.utils = NexT.$u = {
   /**
-   * Wrap images with fancybox support.
+   * Wrap image with fancybox support.
    */
   wrapImageWithFancyBox: function () {
     $('.content img')
@@ -40,7 +40,7 @@ NexT.utils = NexT.$u = {
 
   lazyLoadPostsImages: function () {
     $('#posts').find('img').lazyload({
-      //placeholder: '/images/loading.gif',
+      //placeholder: '/image/loading.gif',
       effect: 'fadeIn',
       threshold : 0
     });
