@@ -546,8 +546,8 @@
         <category>读书笔记</category>
       </categories>
       <tags>
-        <tag>分布式</tag>
         <tag>架构</tag>
+        <tag>分布式</tag>
         <tag>大数据</tag>
       </tags>
   </entry>
@@ -709,9 +709,9 @@
         <category>随笔</category>
       </categories>
       <tags>
+        <tag>电影</tag>
         <tag>人生</tag>
         <tag>成长</tag>
-        <tag>电影</tag>
       </tags>
   </entry>
   <entry>
@@ -1127,11 +1127,11 @@
         <category>Java</category>
       </categories>
       <tags>
-        <tag>线程通信</tag>
         <tag>synchronized</tag>
         <tag>ReentrantLock</tag>
         <tag>ReentrantReadWriteLock</tag>
         <tag>StampedLock</tag>
+        <tag>线程通信</tag>
       </tags>
   </entry>
   <entry>
@@ -1371,9 +1371,9 @@
         <category>Java</category>
       </categories>
       <tags>
+        <tag>并发编程</tag>
         <tag>join</tag>
         <tag>阻塞线程</tag>
-        <tag>并发编程</tag>
       </tags>
   </entry>
   <entry>
@@ -1799,8 +1799,8 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
         <category>Java</category>
       </categories>
       <tags>
-        <tag>并发编程</tag>
         <tag>多线程</tag>
+        <tag>并发编程</tag>
         <tag>java</tag>
       </tags>
   </entry>
@@ -1824,9 +1824,9 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
         <category>随笔</category>
       </categories>
       <tags>
-        <tag>电影</tag>
         <tag>蚯蚓</tag>
         <tag>韩国</tag>
+        <tag>电影</tag>
         <tag>批判</tag>
         <tag>自由</tag>
         <tag>人性</tag>
@@ -2095,8 +2095,8 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
         <category>ML/DL</category>
       </categories>
       <tags>
-        <tag>降维</tag>
         <tag>机器学习</tag>
+        <tag>降维</tag>
         <tag>SVD</tag>
       </tags>
   </entry>
@@ -2139,9 +2139,9 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
         <category>ML/DL</category>
       </categories>
       <tags>
+        <tag>机器学习</tag>
         <tag>PCA</tag>
         <tag>降维</tag>
-        <tag>机器学习</tag>
         <tag>特征提取</tag>
       </tags>
   </entry>
@@ -2458,9 +2458,9 @@ ReadWriteLock类中，读锁和写锁各有一个获取锁和释放锁的方法�
         <category>ML/DL</category>
       </categories>
       <tags>
-        <tag>机器学习</tag>
         <tag>关联分析</tag>
         <tag>Apriori</tag>
+        <tag>机器学习</tag>
       </tags>
   </entry>
   <entry>
