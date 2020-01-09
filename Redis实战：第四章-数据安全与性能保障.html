@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("http://purice93.github.io"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content=",,,," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="随风而行" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="redis不提供严格的锁机制，即不保证数据的完全正确性，所以需要用户自己去严格检查。为了保证数据的安全，需要将数据及时的存储到硬盘上，redis提供两种持久化的方式：快照-批量写入；追加-单条追加。另外为了保证数据库的安全，防止数据丢失和为了负载均衡，redis也提供了分布式情况下的复制策略，可以对多个服务器数据进行同步。另外，根据不同的场景，我们需要合理的判断形势，在性能和安全上达到一个平衡，">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Redis实战：第四章-数据安全与性能保障">
+<meta property="og:url" content="https://purice93.github.io/Redis%E5%AE%9E%E6%88%98%EF%BC%9A%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BF%9D%E9%9A%9C.html">
+<meta property="og:site_name" content="随风而行">
+<meta property="og:description" content="redis不提供严格的锁机制，即不保证数据的完全正确性，所以需要用户自己去严格检查。为了保证数据的安全，需要将数据及时的存储到硬盘上，redis提供两种持久化的方式：快照-批量写入；追加-单条追加。另外为了保证数据库的安全，防止数据丢失和为了负载均衡，redis也提供了分布式情况下的复制策略，可以对多个服务器数据进行同步。另外，根据不同的场景，我们需要合理的判断形势，在性能和安全上达到一个平衡，">
+<meta property="og:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1530795052692.jpg">
+<meta property="article:published_time" content="2018-07-05T13:27:46.000Z">
+<meta property="article:modified_time" content="2020-01-09T07:46:52.722Z">
+<meta property="article:author" content="soundslow">
+<meta property="article:tag" content="事务">
+<meta property="article:tag" content="持久化">
+<meta property="article:tag" content="RDB">
+<meta property="article:tag" content="AOF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://osiy4s0ad.bkt.clouddn.com/soundblog/1530795052692.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://purice93.github.io/Redis实战：第四章-数据安全与性能保障.html"/>
+
+
+
+
+
+  <title>Redis实战：第四章-数据安全与性能保障 | 随风而行</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">随风而行</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">soundslow</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive          //归档"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th           //分类"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags                     //标签"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user                   //关于"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-游戏">
+          <a href="/games/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad                  //游戏"></i> <br />
+            
+            游戏
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">Redis实战：第四章-数据安全与性能保障</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <blockquote>
+<p>redis不提供严格的锁机制，即不保证数据的完全正确性，所以需要用户自己去严格检查。为了保证数据的安全，需要将数据及时的存储到硬盘上，redis提供两种持久化的方式：快照-批量写入；追加-单条追加。另外为了保证数据库的安全，防止数据丢失和为了负载均衡，redis也提供了分布式情况下的复制策略，可以对多个服务器数据进行同步。另外，根据不同的场景，我们需要合理的判断形势，在性能和安全上达到一个平衡，即既能够快速的处理数据，又能够有效地避免数据的丢失。</p>
+</blockquote>
+<ul>
+<li><p>4.1 数据持久化</p>
+<ul>
+<li><p>快照snapshotting<br>快照即对数据进行批量备份，之前的备份数据将被删除。创建快照的方式有以下几种：</p>
+<ul>
+<li>通过bgsave创建快照，这种方式下，redis会通过调用fork来创建一个子线程，子线程负责将快照写入硬盘，而父线程还是继续执行接下来的步骤。</li>
+<li>客户端直接向redis发送save命令来执行快照，这时，redis在完成当前快照之前，将不再响应其他命令，可以避免新的数据写入，不存在丢失情况。但是这种情况并不常用，我的思考：因为redis就是用来高并发的，如果需要等待，还不如不用；另外，save命令使用在以下场景，即bgsave命令时，没有足够的内存（这种情况需要避免），或者并不需要太高效率，完全可以等待持久化操作。</li>
+<li>用户通过<code>save 60 10000</code>命令来控制bgsave的时间，这段话代表，60秒之内有10000个写入时，将触发bgsave命令。redis在接收到关闭服务器请求时或者接收到TERM信号时，将会触发save命令，阻塞所有客户端，并在save命令执行完毕后，关闭服务器。从而保证数据保存正常。</li>
+<li>另外在都服务情况下，当主服务器向从服务器进行数据复制时，即SYNC命令。主服务器需要对自身数据进行快照，即执行bgsave命令。（如果是刚刚执行，则不再执行，如何判断？应该是有个时间字段判断~）</li>
+</ul>
+</li>
+<li><p><em>缺陷：*</em><br>通过快照的逻辑发现，快照是用来保存数据到磁盘上，如果没有及时快照，比如在下一次快照之前，系统奔溃，那么内存中还没有被快照的数据将永久丢失，所有，快照持久化只适用于那些即便丢失部分数据，也并不会造成问题的情况，比如视频数据。</p>
+</li>
+<li><p><em>场景*</em><br>1 一般而言对于bgsave命令，根据不同的场景，时间任务设定也不尽相同，因此为了更加贴近实际，需要开发场景和生产场景尽量相同<br>2 另外为了防止数据丢失，需要保存日志，一边在之后根据日志来恢复数据。<br>3 由于bgsave命令需要创建子线程，对于20G的大数据处理，将会存在间断性的停顿，但是对于save，速度将大大加快。为了降低停顿对用户体验的影响，我们可以选择低峰时间段进行快照，比如凌晨3点。</p>
+</li>
+<li><p>追加append-only file<br>快照能够将大量数据进行写入，这样数据存储将能够很好地组织，也便于查询，但是容易导致大量数据丢失。而AOF追加，通过只在AOF文件后进行追加，从而及时的添加当前的信息。</p>
+<blockquote>
+<p>文件同步：write和flush命令，write会将把数据存储到缓冲区，然后等待操作系统将数据写入硬盘，flush则会请求操作系统将数据尽快写入硬盘。</p>
+</blockquote>
+<p>AOF有三种选择，每个命令执行一次，每间隔一秒执行一次；让操作系统自己判断执行时间。为了兼顾安全性和写入性能，一般使用每间隔一秒执行一次追加。</p>
+<ul>
+<li>重写/压缩AOF<br>前面，我们已经知道了，AOF操作通过追加，可以将文件的丢失控制在一秒以内，从而大大防止数据的丢失，但为什么不直接使用这种方式，还使用快照呢？原因在于，每一次AOF都会产生命令记录AOF，这样就会导致AOF文件越来越大，最终可能沾满硬盘空间，所以，为了避免这种情况，AOF提供了重写功能，即压缩数据，类似于java垃圾回收中的复制整理，通过将数据进行重新整理，去掉冗余的数据，将大大降低磁盘的空间。<br>AOF重写命令也有两个，BGREWRITEAOF和AUTO..，这两个命令的逻辑同bgsave/save类似，也是通过是否开子线程来进行数据重写操作。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>4.2 复制<br>为了满足分布式服务器结构，数据与数据之间的互相备份，redis提供了复制功能。通过复制功能，就可以大大降低单个redis的负载，从而实现负载均衡。</p>
+<ul>
+<li>redis的复制功能需要配置主从服务器，具体参数参考相关文档</li>
+<li>redis在进行复制时，将擦除从服务器的所有相关数据；另外由于主服务器进行复制时将创建子线程，将大大占用内存，所以，为了防止效率低下，在内存初期配置时，最好预留一部分内存，即主服务器只是用60-70%的内存。</li>
+<li>主服务链：有时候我们可能会这样设计一个服务群，一个主服务器，和100个从服务器，但是这样是否很好？如果100台服务器同时请求复制，那么主服务器的压力将很大很大，所以，为了进一步降低服务器的压力，我们使用了服务器链（有如树结构），如下图，每一层的服务器都相当于下一层服务器的主服务器，每一个主服务器的连接点都不会太多，这样，顶端的服务器压力将会分配给下面的所有服务器。<br><img src="http://osiy4s0ad.bkt.clouddn.com/soundblog/1530795052692.jpg" alt="enter description here"></li>
+</ul>
+</li>
+<li><p>磁盘检查<br>为了验证主服务器是否已经将数据发送到从服务器，需要向主服务器发送一个唯一的虚构值，这个虚构值也将发送到从服务器，通过检查从服务器是否含有虚构值就可以判断，是否发送成功。</p>
+</li>
+<li><p>4.3 处理系统故障(略)</p>
+</li>
+<li><p>4.4 Redis事物<br>redsi事物并不同于mysql中的事物，即它并不会保证事物的原子性和自动回滚，需要用户自己设置判断。具体信息如下：</p>
+<blockquote>
+<p>单个 Redis 命令的执行是原子性的，但 Redis 没有在事务上增加任何维持原子性的机制，所以 Redis 事务的执行并不是原子性的。<br>事务可以理解为一个打包的批量执行脚本，但批量指令并非原子化的操作，中间某条指令的失败不会导致前面已做指令的回滚，也不会造成后续的指令不做。<br>例子：如下的例子为模拟游戏商城中，卖家发布自己的商品，和卖家购买商品的逻辑。</p>
+</blockquote>
+</li>
+<li><p>4.5 非事物型流水线<br>通过上面的redis事物，我们知道，redis的事物并不是真正意义上的事物，而是由两部分组成，一部分为通过pipeline流水线，批量执行命令，这样大大增加写效率；另一个通过使用multi和exec命令，保证当前的事物不被其他客户端干扰，从而一定程度上避免数据冲突。我们发现，如果我们并不需要数据安全，但是，觉得单个命令执行过慢，那么，是否就可以使用事事务的第一个逻辑，进行批量写入，即只使用流水线功能，但是不屏蔽其他客户端。例子如下：</p>
+</li>
+<li><p>总结</p>
+</li>
+<li><p><em>数据库总是在读入和写入之间达到平衡*</em>，写入快（如追加），则查找慢（数据不规律）；写入慢（进行有规律的写入），则查找就快。之所以导致这个原因，是由于硬盘的逻辑结构和物理逻结构并不相同，我们存储时，都是根据物理结构，但是查找使用逻辑结构，所以效率降低。<br>另外，<strong>数据库存储总是在安全和性能之间平衡</strong>，为了安全就必须对数据进行严格检查加锁，但是为了效率，又必须进行加锁同步，而不是异步执行。所以，需要找到一个折中，如果数据安全不是太严格，就可以适当降低安全限制，使用乐观锁。但此时，用户需要自己创建检查。</p>
+</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br></pre></td><td class="code"><pre><span class="line">import redis.clients.jedis.Jedis;</span><br><span class="line">import redis.clients.jedis.Pipeline;</span><br><span class="line">import redis.clients.jedis.Transaction;</span><br><span class="line">import redis.clients.jedis.Tuple;</span><br><span class="line"></span><br><span class="line">import java.lang.reflect.Method;</span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.Map;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @author: ZouTai</span></span><br><span class="line"><span class="comment"> * @date: 2018/7/3</span></span><br><span class="line"><span class="comment"> * @description: 第4章：数据安全与性能保障</span></span><br><span class="line"><span class="comment"> * @create: 2018-07-03 11:25</span></span><br><span class="line"><span class="comment"> * 不同于关系型数据库的事务，redis数据库事务并不是使用悲观锁，</span></span><br><span class="line"><span class="comment"> * 在执行事务时，1、不会检查相关变量，2、也不会自动执行重试</span></span><br><span class="line"><span class="comment"> * 所以需要开发者自己手动检查变量，手动重试（redis类似于悲观锁，线程不加锁，但是需要检查）</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public class Chapter04 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new Chapter04().run();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void run() &#123;</span><br><span class="line">        Jedis conn = new Jedis("localhost");</span><br><span class="line">        conn.select(15);</span><br><span class="line"></span><br><span class="line">        testListItem(conn,false);</span><br><span class="line">        testPurchaseItem(conn);</span><br><span class="line">        testBenchMark(conn);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void testBenchMark(Jedis conn) &#123;</span><br><span class="line">        benchmarkUpdateToken(conn, 5);</span><br><span class="line">        benchmarkUpdateToken2(conn, 5);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 不使用反射</span></span><br><span class="line"><span class="comment">     * @param conn</span></span><br><span class="line"><span class="comment">     * @param duration</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    private void benchmarkUpdateToken2(Jedis conn, int duration) &#123;</span><br><span class="line">        int count = 0;</span><br><span class="line">        long start = System.currentTimeMillis();</span><br><span class="line">        long end = System.currentTimeMillis() + duration * 1000;</span><br><span class="line">        while (start &lt; end) &#123;</span><br><span class="line">            updateToken(conn, "token", "user", "item");</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        long delta = System.currentTimeMillis() - start;</span><br><span class="line">        System<span class="selector-class">.out</span>.println(</span><br><span class="line">                <span class="string">"updateToken"</span> + <span class="string">' '</span> +</span><br><span class="line">                        count + <span class="string">' '</span> +</span><br><span class="line">                        (delta / <span class="number">1000</span>) + <span class="string">' '</span> +</span><br><span class="line">                        (count / (delta / 1000)));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        count = 0;</span><br><span class="line">        start = System.currentTimeMillis();</span><br><span class="line">        end = System.currentTimeMillis() + duration * 1000;</span><br><span class="line">        while (start &lt; end) &#123;</span><br><span class="line">            updateTokenPipeline(conn, "token", "user", "item");</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        delta = System.currentTimeMillis() - start;</span><br><span class="line">        System<span class="selector-class">.out</span>.println(</span><br><span class="line">                <span class="string">"updateToken"</span> + <span class="string">' '</span> +</span><br><span class="line">                        count + <span class="string">' '</span> +</span><br><span class="line">                        (delta / <span class="number">1000</span>) + <span class="string">' '</span> +</span><br><span class="line">                        (count / (delta / 1000)));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void benchmarkUpdateToken(Jedis conn, int duration) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            <span class="comment">// 使用java反射功能，减少函数冗余（可以对比发现）</span></span><br><span class="line">            @SuppressWarnings(<span class="string">"rawtypes"</span>)</span><br><span class="line">            Class[] args = new Class[]&#123;</span><br><span class="line">                Jedis<span class="selector-class">.class</span>, String<span class="selector-class">.class</span>, String<span class="selector-class">.class</span>, String.class</span><br><span class="line">            &#125;; // 定义4个函数参数</span><br><span class="line">            Method[] methods = new Method[]&#123;</span><br><span class="line">                this.getClass().getDeclaredMethod(<span class="string">"updateToken"</span>, args),</span><br><span class="line">                this.getClass().getDeclaredMethod(<span class="string">"updateTokenPipeline"</span>, args),</span><br><span class="line">            &#125;;</span><br><span class="line">            <span class="keyword">for</span> (Method method : methods) &#123;</span><br><span class="line">                int count = 0;</span><br><span class="line">                long start = System.currentTimeMillis();</span><br><span class="line">                long end = System.currentTimeMillis() + duration * 1000;</span><br><span class="line">                while (start &lt; end) &#123;</span><br><span class="line">                    method.invoke(this, conn, "token", "user", "item");</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                long delta = System.currentTimeMillis() - start;</span><br><span class="line">                System<span class="selector-class">.out</span>.println(</span><br><span class="line">                    method.getName() + <span class="string">' '</span> +</span><br><span class="line">                    count + <span class="string">' '</span> +</span><br><span class="line">                    (delta / <span class="number">1000</span>) + <span class="string">' '</span> +</span><br><span class="line">                    (count / (delta / 1000)));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 使用非事务模式，但是集成提交任务</span></span><br><span class="line"><span class="comment">     * @param conn</span></span><br><span class="line"><span class="comment">     * @param token</span></span><br><span class="line"><span class="comment">     * @param user</span></span><br><span class="line"><span class="comment">     * @param item</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    private void updateTokenPipeline(Jedis conn, String token, String user, String item) &#123;</span><br><span class="line">        long timestamp = System.currentTimeMillis() / 1000;</span><br><span class="line">        Pipeline pipe = conn.pipelined();</span><br><span class="line">        pipe.multi();</span><br><span class="line">        pipe.hset("login:", token, user);</span><br><span class="line">        pipe.zadd("recent:", timestamp, token);</span><br><span class="line">        <span class="keyword">if</span> (item != null) &#123;</span><br><span class="line">            pipe.zadd("viewed:" + token, timestamp, item);</span><br><span class="line">            pipe.zremrangeByRank("viewed:" + token, 0, -26);</span><br><span class="line">            pipe.zincrby("viewed:", -1, item);</span><br><span class="line">        &#125;</span><br><span class="line">        pipe.exec();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void updateToken(Jedis conn, String token, String user, String item) &#123;</span><br><span class="line">        long timestamp = System.currentTimeMillis() / 1000;</span><br><span class="line">        conn.hset("login:", token, user);</span><br><span class="line">        conn.zadd("recent:", timestamp, token);</span><br><span class="line">        <span class="keyword">if</span> (item != null) &#123;</span><br><span class="line">            conn.zadd("viewed:" + token, timestamp, item);</span><br><span class="line">            conn.zremrangeByRank("viewed:" + token, 0, -26);</span><br><span class="line">            conn.zincrby("viewed:", -1, item);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试2：购买</span></span><br><span class="line"><span class="comment">     * @param conn</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    private void testPurchaseItem(Jedis conn) &#123;</span><br><span class="line">        testListItem(conn, true);</span><br><span class="line">        <span class="comment">// 初始化买家信息</span></span><br><span class="line">        conn.hset("users:buyerId", "funds", "100");</span><br><span class="line">        conn.hset("users:buyerId", "name", "buyerName");</span><br><span class="line">        Map&lt;String, String&gt; buyersMap = conn.hgetAll("users:buyerId");</span><br><span class="line">        System.out.println("输出卖家信息：");</span><br><span class="line">        <span class="keyword">for</span> (Map.Entry&lt;String, String&gt; entry : buyersMap.entrySet()) &#123;</span><br><span class="line">            System.out.println(" " + entry.getKey() + " " + entry.getValue());</span><br><span class="line">        &#125;</span><br><span class="line">        boolean result = purchaseItem(conn, "userID1", "Item1", "buyerId", 10);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 购买</span></span><br><span class="line"><span class="comment">     * @param conn</span></span><br><span class="line"><span class="comment">     * @param sellerId</span></span><br><span class="line"><span class="comment">     * @param itemId</span></span><br><span class="line"><span class="comment">     * @param buyerId</span></span><br><span class="line"><span class="comment">     * @param lprice</span></span><br><span class="line"><span class="comment">     * 以下逻辑类似于发布商品</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    private boolean purchaseItem(Jedis conn, String sellerId, String itemId, String buyerId, int lprice) &#123;</span><br><span class="line">        String buyer = "users:" + buyerId;</span><br><span class="line">        String seller = "users:" + sellerId;</span><br><span class="line">        Long endTime = System.currentTimeMillis() + 5000;</span><br><span class="line">        String inventory = "inventory:" + buyerId;</span><br><span class="line">        String item = itemId + '.' + sellerId;</span><br><span class="line">        while (System.currentTimeMillis() &lt; endTime) &#123;</span><br><span class="line">            conn.watch("market:", buyer);</span><br><span class="line">            double price = conn.zscore("market:", item);</span><br><span class="line">            double funds = Double.parseDouble(conn.hget(buyer, "funds"));</span><br><span class="line">            if (price != lprice || price &gt; funds) &#123;</span><br><span class="line">                conn.unwatch();</span><br><span class="line">                return false;</span><br><span class="line">            &#125;</span><br><span class="line">            Transaction trans = conn.multi();</span><br><span class="line">            trans.hincrBy(seller, "funds", (long) price);</span><br><span class="line">            trans.hincrBy(buyer, "funds", (long) -price);</span><br><span class="line">            trans.sadd(inventory, itemId);</span><br><span class="line">            trans.zrem("market:", item);</span><br><span class="line">            List&lt;Object&gt; results = trans.exec();</span><br><span class="line">            <span class="comment">// null response indicates that the transaction was aborted due to</span></span><br><span class="line">            <span class="comment">// the watched key changing.</span></span><br><span class="line">            <span class="keyword">if</span> (results == null) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试1：</span></span><br><span class="line"><span class="comment">     * 使用事务检查watch，将商品放到市场上</span></span><br><span class="line"><span class="comment">     * @param conn</span></span><br><span class="line"><span class="comment">     * @param nested</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    private void testListItem(Jedis conn, boolean nested) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!nested)&#123;</span><br><span class="line">            System.out.println("\n----- testListItem -----");</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        String sellerId = "userID1";</span><br><span class="line">        String item = "Item1";</span><br><span class="line">        conn.sadd("inventory:" + sellerId, item);</span><br><span class="line"></span><br><span class="line">        System.out.println("当前卖家拥有的商品有：");</span><br><span class="line">        Set&lt;String&gt; itemSet = conn.smembers("inventory:" + sellerId);</span><br><span class="line">        <span class="keyword">for</span> (String one : itemSet) &#123;</span><br><span class="line">            System.out.println("  " + one);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        listItem(conn, item, sellerId, 10);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出商场商品：</span></span><br><span class="line">        System.out.println("输出商场商品：");</span><br><span class="line">        Set&lt;Tuple&gt; sellingItemSets = conn.zrangeWithScores("market:", 0, -1);</span><br><span class="line">        <span class="keyword">for</span> (Tuple t : sellingItemSets) &#123;</span><br><span class="line">            System.out.println("  " + t.getElement() + "---" + t.getScore());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发放商品</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * @param conn</span></span><br><span class="line"><span class="comment">     * @param item</span></span><br><span class="line"><span class="comment">     * @param sellerId</span></span><br><span class="line"><span class="comment">     * @param price</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    private boolean listItem(Jedis conn, String item, String sellerId, double price) &#123;</span><br><span class="line">        long endTime = System.currentTimeMillis() + 5000;</span><br><span class="line"></span><br><span class="line">        String inventory = "inventory:" + sellerId;</span><br><span class="line">        String itemSellerId = item + "." + sellerId;</span><br><span class="line">        while (System.currentTimeMillis() &lt; endTime) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 1.1 监视表inventory，线程可见；乐观锁</span></span><br><span class="line">            conn.watch(inventory);</span><br><span class="line">            <span class="comment">// 1.2 检查卖家是否有这个商品，若没有，返回false</span></span><br><span class="line">            <span class="keyword">if</span> (!conn.sismember(inventory, item)) &#123;</span><br><span class="line">                conn.unwatch();</span><br><span class="line">                return false;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 1.3 开启事务流水线</span></span><br><span class="line">            Transaction transaction = conn.multi();</span><br><span class="line">            transaction.zadd("market:", price, itemSellerId);</span><br><span class="line">            transaction.srem(inventory, item);</span><br><span class="line">            <span class="comment">// 1.4 执行流水线操作</span></span><br><span class="line">            List&lt;Object&gt; results = transaction.exec();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 1.5 如果事务执行失败，则重试-继续执行，直到超时</span></span><br><span class="line">            <span class="keyword">if</span> (results == null) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+     <div id="gitalk-container"></div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/default_avatar.jpg"
+                alt="soundslow" />
+            
+              <p class="site-author-name" itemprop="name">soundslow</p>
+              <p class="site-description motion-element" itemprop="description">I take the newer medications, but I still see things that are not here.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive%20%20%20%20%20%20%20%20%20%20/%E5%BD%92%E6%A1%A3">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/purice93" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/soundslow" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://douban.com/people/purice" target="_blank" title="豆瓣">
+                      
+                        <i class="fa fa-fw fa-globe"></i>豆瓣</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://www.zhihu.com/people/zou-tai-89" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jm.taobao.org/" title="阿里中间件" target="_blank">阿里中间件</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://tech.meituan.com/" title="美团点评" target="_blank">美团点评</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.ibm.com/developerworks/cn/java/" title="IBM" target="_blank">IBM</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2013 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">soundslow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+<div><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数 <span id="busuanzi_value_site_uv"></span> 人
+</span>
+</div>
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共71.1k字</span>
+</div>
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'a7cb53e868f43c47336f',
+          clientSecret: '9cd4ba9a4483e96ba688919a15a9bc97a3ab535d',
+          repo: 'gitalk',
+          owner: 'purice93',
+          admin: ['purice93'],
+          id:'gitalk_20180705212746',
+          labels: 'gitalk'.split(',').filter(l => l),
+          perPage: 10,
+          pagerDirection: 'last',
+          createIssueManually: true,
+          distractionFreeMode: false
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

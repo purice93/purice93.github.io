@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("http://purice93.github.io"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,boost,提升树," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="随风而行" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="这一章的主要思想就是“三个臭皮匠赛一个诸葛亮”。一般而言，我们都是通过一个分类器进行分类，但是一个分类器可能会出现偶然误差错误，就像一个人总会出现失误一样。所以，我们学习多个不同的分类器，然后将这些分类器通过加上不同的权重组合起来，就形成了一种强大的集成分类器。而这其中，可以再次改进，对不同的分类器，分类效果不同的，权重也可能不同，这样，分类效果好的分类器能够得到更大的“投票权”  前言  元算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习实战-7AdaBoost提升算法">
+<meta property="og:url" content="https://purice93.github.io/2017/11/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-7AdaBoost%E6%8F%90%E5%8D%87%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="随风而行">
+<meta property="og:description" content="这一章的主要思想就是“三个臭皮匠赛一个诸葛亮”。一般而言，我们都是通过一个分类器进行分类，但是一个分类器可能会出现偶然误差错误，就像一个人总会出现失误一样。所以，我们学习多个不同的分类器，然后将这些分类器通过加上不同的权重组合起来，就形成了一种强大的集成分类器。而这其中，可以再次改进，对不同的分类器，分类效果不同的，权重也可能不同，这样，分类效果好的分类器能够得到更大的“投票权”  前言  元算">
+<meta property="og:image" content="https://purice93.github.io/2017/11/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-7AdaBoost%E6%8F%90%E5%8D%87%E7%AE%97%E6%B3%95/images/1509893412709.jpg">
+<meta property="article:published_time" content="2017-11-05T15:02:57.000Z">
+<meta property="article:modified_time" content="2020-01-09T07:40:30.346Z">
+<meta property="article:author" content="soundslow">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="boost">
+<meta property="article:tag" content="提升树">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://purice93.github.io/2017/11/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-7AdaBoost%E6%8F%90%E5%8D%87%E7%AE%97%E6%B3%95/images/1509893412709.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://purice93.github.io/2017/11/05/机器学习实战-7AdaBoost提升算法/"/>
+
+
+
+
+
+  <title>机器学习实战-7AdaBoost提升算法 | 随风而行</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">随风而行</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">soundslow</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive          //归档"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th           //分类"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags                     //标签"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user                   //关于"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-游戏">
+          <a href="/games/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad                  //游戏"></i> <br />
+            
+            游戏
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://purice93.github.io/2017/11/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-7AdaBoost%E6%8F%90%E5%8D%87%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="soundslow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="随风而行">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">机器学习实战-7AdaBoost提升算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T23:02:57+08:00">
+                2017-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ML-DL/" itemprop="url" rel="index">
+                    <span itemprop="name">ML/DL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span id="busuanzi_value_page_pv"></span>次阅读
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.9k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>这一章的主要思想就是“三个臭皮匠赛一个诸葛亮”。一般而言，我们都是通过一个分类器进行分类，但是一个分类器可能会出现偶然误差错误，就像一个人总会出现失误一样。所以，我们学习多个不同的分类器，然后将这些分类器通过加上不同的权重组合起来，就形成了一种强大的集成分类器。而这其中，可以再次改进，对不同的分类器，分类效果不同的，权重也可能不同，这样，分类效果好的分类器能够得到更大的“投票权”</p>
+</blockquote>
+<p>前言</p>
+<ul>
+<li>元算法/集成学习：即考虑多个专家的意见而不是一个人独断专权</li>
+<li>AdaBoost：<ul>
+<li>优点：泛化错误率低，易编码，无参数调整，可使用在大多数分类器上</li>
+<li>缺点：对离群点敏感，即对极端值拟合不好（如极大极小值）</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>7.1 数据如何划分–多重抽样分类器（集成学习的分类）</p>
+<ul>
+<li>7.1.1 bagging：Bootstrap aggregating，引导聚集算法/装袋算法<ul>
+<li>原理：从原始数据总随机有放回的抽取n次组成一个数据集，训练为一个分类器。这样重复进行m次,就得出m个分类器。分类器的权重相等。记住这些分类器数据集是并行进行的，与boosting有区别。</li>
+<li>改进算法：随机森林（random forest）</li>
+</ul>
+</li>
+<li>7.1.2 boosting（Boost–增强）<ul>
+<li>原理：与bagging类似，不同的是，每个分类器的数据集不是并行的，而是串行的。即每个新的分类器都是根据已经训练出来的分类器的性能来进行训练的，之后的分类器需要使用到之前已经训练好的分类器的数据集。boosting集中关注那些被错误分类的数据集。</li>
+<li>bagging分类器的权重是相等的，boosting的权重是不相等的，每个权重代表的是分类器在上一次迭代时的成功度。</li>
+<li>boosting的版本有很多，AdaBoost是其中一种（AdaBoost–Adaptive Boosting–自适应增强）</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>7.2 原理和算法</p>
+<ul>
+<li>这里含有许多的公式证明，即为什么使用这些公式，而不使用其它的公式，其中的道理，很难说的清除，暂且保留（可参考《统计学习方法》P139，《西瓜书》P175）</li>
+<li>第一个分类器的权重alpha:<ul>
+<li>定义错误率w = (被错误分类的样本)/(样本总数)</li>
+<li>alpha = （1/2）*ln((1-w)/w);即错误率越低，权重越大。实际代码操作，变化巨大</li>
+</ul>
+</li>
+<li>一个分类器中每个样本的权重更新：<ul>
+<li>D = D * exp(+-1 * alpha) / sum(D);被正确分类则为-1，否则为+1。注意：这里在代码中有技巧，因为标签为+-1，可以抵消</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>7.3 单层决策树–决策树桩（decision stump）</p>
+<ul>
+<li>代码boost.py</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">""</span><span class="string">" </span></span><br><span class="line"><span class="string">@author: zoutai</span></span><br><span class="line"><span class="string">@file: boost.py</span></span><br><span class="line"><span class="string">@date: 2017/11/04</span></span><br><span class="line"><span class="string">@description: 单层决策树-找出最好的一个特征，且最好的中间阈值;</span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br><span class="line">from numpy import *</span><br><span class="line">from unit07<span class="selector-class">.adaboost</span> import *</span><br><span class="line"></span><br><span class="line"># 这个函数的作用是：对第dimen个特征进行分类，样本点dimen特征小于阈值的被标记为-1，否则标记为+1,。</span><br><span class="line"># 输出为M*1的二维数组，相当于把每个样本当做只有一个特征来划分。这里的1、-1对应标签的1、-1，后面会比较。</span><br><span class="line"># 注意：这里需要对python特别熟悉，shape(dataMat)[0] == m；</span><br><span class="line"># dataMat[:,dimen] &lt;= threshVal返回的是第一列下标，逻辑复杂但是表达却相当简化，这也许就是python的魅力吧</span><br><span class="line">def stumpClassify(dataMat,dimen,threshVal,threshInequal):</span><br><span class="line">    sampleArray = ones((shape(dataMat)[<span class="number">0</span>],<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">if</span> threshInequal == <span class="string">'lt'</span>:</span><br><span class="line">        sampleArray[dataMat[:,dimen] &lt;= threshVal] = -<span class="number">1.0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        sampleArray[dataMat[:,dimen] &gt; threshVal] = <span class="number">1.0</span></span><br><span class="line">    return sampleArray</span><br><span class="line"></span><br><span class="line">def buildStump(dataArr, classLabels,D):</span><br><span class="line">    dataMat = mat(dataArr);labelMat = mat(classLabels).T</span><br><span class="line">    m,n = shape(dataMat)</span><br><span class="line">    numSteps = 10;</span><br><span class="line">    bestStump = &#123;&#125;; # 用于保存重要的结果值，如阈值，样本中节点下标等。</span><br><span class="line">    bestClass = mat(zeros((m,1))) # 分类结果mat，与sampleArray对应</span><br><span class="line">    minError = inf</span><br><span class="line">    # 遍历特征变量</span><br><span class="line">    <span class="keyword">for</span> <span class="selector-tag">i</span> <span class="keyword">in</span> range(n):</span><br><span class="line">        # 找出第i个特征值的最小值和最大值</span><br><span class="line">        rangeMin = dataMat[:,i].min();rangeMax = dataMat[:,i].max()</span><br><span class="line">        stepSize = (rangeMax-rangeMin)/numSteps # 每一步特征值间隔</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(-<span class="number">1</span>,int(numSteps)+<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> inequal <span class="keyword">in</span> [<span class="string">'lt'</span>,<span class="string">'gt'</span>]:</span><br><span class="line">                threshVal = (rangeMin+<span class="attribute">float</span>(j)*stepSize)</span><br><span class="line">                dimenPredictedVals = stumpClassify(dataMat,<span class="selector-tag">i</span>,threshVal,inequal)</span><br><span class="line">                errArr = mat(ones((m,<span class="number">1</span>)))</span><br><span class="line">                errArr[dimenPredictedVals == labelMat] = 0 # 正确分类的设为0，错误的默认为1</span><br><span class="line">                # 重点来了，这里才是提升树的核心：通过D来调整特征值对应权值w的比重。D第一次需要初始化</span><br><span class="line">                weightError = D.T*errArr</span><br><span class="line">                print("split: dim %d,thresh %.2f,hresh inequal: %s,the weighted error is %.3f" % (i,threshVal,inequal,weightError))</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> weightError &lt; minError:</span><br><span class="line">                    minError = weightError</span><br><span class="line">                    bestClass = dimenPredictedVals.copy() # 会被修改，所以需要copy</span><br><span class="line">                    bestStump[<span class="string">'dim'</span>] = i</span><br><span class="line">                    bestStump[<span class="string">'thresh'</span>] = threshVal</span><br><span class="line">                    bestStump[<span class="string">'ineq'</span>] = inequal</span><br><span class="line">    return bestStump,minError,bestClass</span><br></pre></td></tr></table></figure>
+<ul>
+<li>代码adaboost.py</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">from numpy import *</span><br><span class="line">from unit07<span class="selector-class">.boost</span> import *</span><br><span class="line"></span><br><span class="line"><span class="string">""</span><span class="string">" </span></span><br><span class="line"><span class="string">@author: zoutai</span></span><br><span class="line"><span class="string">@file: adaboost.py </span></span><br><span class="line"><span class="string">@date: 2017/11/04</span></span><br><span class="line"><span class="string">@description:</span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br><span class="line"></span><br><span class="line">def loadSimpData():</span><br><span class="line">    datMat = matrix([[ <span class="number">1</span>. ,  <span class="number">2.1</span>],</span><br><span class="line">        [ <span class="number">2</span>. ,  <span class="number">1.1</span>],</span><br><span class="line">        [ <span class="number">1.3</span>,  <span class="number">1</span>. ],</span><br><span class="line">        [ <span class="number">1</span>. ,  <span class="number">1</span>. ],</span><br><span class="line">        [ <span class="number">2</span>. ,  <span class="number">1</span>. ]])</span><br><span class="line">    classLabels = [<span class="number">1.0</span>, <span class="number">1.0</span>, -<span class="number">1.0</span>, -<span class="number">1.0</span>, <span class="number">1.0</span>]</span><br><span class="line">    return datMat,classLabels</span><br><span class="line"></span><br><span class="line">def adaboostTrainDS(dataArr,classLabels,numIt):</span><br><span class="line">    weakClassArr = [] # 弱分类器</span><br><span class="line">    m = shape(dataArr)[<span class="number">0</span>]</span><br><span class="line">    D = mat(ones((m,<span class="number">1</span>))/m)</span><br><span class="line">    sumBestClass = mat(zeros((m,<span class="number">1</span>)))</span><br><span class="line">    <span class="keyword">for</span> <span class="selector-tag">i</span> <span class="keyword">in</span> range(numIt):</span><br><span class="line">        bestStump,error,bestClass = buildStump(dataArr,classLabels,D)</span><br><span class="line">        print(D.T)</span><br><span class="line">        # 核心：alpha是单个分类器的权重</span><br><span class="line">        alpha = <span class="attribute">float</span>(<span class="number">0.5</span>*log((<span class="number">1.0</span>-error)/max(error,<span class="number">1</span>e-<span class="number">16</span>))) # 这里max是防止分母为<span class="number">0</span></span><br><span class="line">        bestStump[<span class="string">'alpha'</span>] = alpha</span><br><span class="line">        weakClassArr.append(bestStump)</span><br><span class="line">        print(bestClass.T)</span><br><span class="line">        # 更新每个决策树的权重</span><br><span class="line">        # 以下使用了P117和P118的公式</span><br><span class="line">        expon = multiply(-1.0*alpha*mat(classLabels).T,bestClass) # classLabels*bestClass 相同则为正</span><br><span class="line">        D = multiply(D,exp(expon))</span><br><span class="line">        print(<span class="string">"---"</span>,sum(D))</span><br><span class="line">        D = D/D.sum()</span><br><span class="line"></span><br><span class="line">        # 以下是为了累计计算错误率，当错误率为0时，终止循环。</span><br><span class="line">        # 但是我有个疑问，问什么要乘以alpha？。如果不乘以alpha，后面也不用sign函数，不可以吗？</span><br><span class="line">        sumBestClass += alpha*bestClass</span><br><span class="line">        print(sumBestClass.T)</span><br><span class="line">        sumError = multiply(sign(sumBestClass) != mat(classLabels)<span class="selector-class">.T</span>,ones((m,<span class="number">1</span>)))</span><br><span class="line">        errorRate = sum(sumError) / m</span><br><span class="line">        print(<span class="string">"total errorRate is : "</span>,errorRate)</span><br><span class="line">        <span class="keyword">if</span> errorRate == <span class="number">0.0</span>:</span><br><span class="line">            break</span><br><span class="line">    return weakClassArr,sumBestClass</span><br><span class="line"></span><br><span class="line"># 对给定数据，在每一个分类器上都进行分类，然后加权求解</span><br><span class="line">def adaClassify(testData,classArr):</span><br><span class="line">    testMat = mat(testData)</span><br><span class="line">    m = shape(testData)[<span class="number">0</span>]</span><br><span class="line">    sumClassArr = mat(zeros((m,<span class="number">1</span>)))</span><br><span class="line">    <span class="keyword">for</span> <span class="selector-tag">i</span> <span class="keyword">in</span> range(len(classArr)):</span><br><span class="line">        oneClassArr = stumpClassify(testMat,classArr[i][<span class="string">'dim'</span>],classArr[i][<span class="string">'thresh'</span>],classArr[i][<span class="string">'ineq'</span>])</span><br><span class="line">        sumClassArr += classArr[i][<span class="string">'alpha'</span>]*oneClassArr</span><br><span class="line">        print(sumClassArr) # 加权计算每一个分类，</span><br><span class="line">    return sign(sumClassArr)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 将文本数据转化为矩阵训练数据</span><br><span class="line">def loadDataSet(filename):</span><br><span class="line">    dataMat = []; labelMat = []</span><br><span class="line">    file = open(filename)</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> file.readlines():</span><br><span class="line">        lineArr = []</span><br><span class="line">        line = line.strip().split()</span><br><span class="line">        <span class="keyword">for</span> <span class="selector-tag">i</span> <span class="keyword">in</span> range(len(line)-<span class="number">1</span>):</span><br><span class="line">            lineArr.append(<span class="attribute">float</span>(line[i]))</span><br><span class="line">        dataMat.append(lineArr)</span><br><span class="line">        labelMat.append(<span class="attribute">float</span>(line[-<span class="number">1</span>]))</span><br><span class="line">    return dataMat,labelMat</span><br><span class="line"></span><br><span class="line"># ROC曲线绘制及AUC计算函数</span><br><span class="line">def plotROC(sumClass,classLabels):</span><br><span class="line">    import matplotlib<span class="selector-class">.pyplot</span> as plt</span><br><span class="line">    cur = (<span class="number">1.0</span>,<span class="number">1.0</span>)</span><br><span class="line">    ySum = <span class="number">0.0</span></span><br><span class="line">    numPosClas = sum(array(classLabels) == 1.0) # 计算真阳例的分母--真实结果为正的数目</span><br><span class="line">    numNoPosClas = len(classLabels) - numPosClas # 计算假阳例的分母--...</span><br><span class="line">    yStep = <span class="number">1</span>/<span class="attribute">float</span>(numPosClas) # y轴上个步进长度，下同理</span><br><span class="line">    xStep = <span class="number">1</span>/<span class="attribute">float</span>(numNoPosClas)</span><br><span class="line">    sortedIndicies = argsort(sumClass) # 重点：argsort函数返回的是数组值从小到大的索引值 参考：http://blog.csdn.net/maoersong/article/details/21875705</span><br><span class="line">    fig = plt.figure()</span><br><span class="line">    fig.clf()</span><br><span class="line">    ax = plt.subplot(<span class="number">111</span>)</span><br><span class="line">    # 这里理解是一个难点！</span><br><span class="line">    # 1、书上说了，由于排序是由大到小，也就是，开始值小的部分，训练师被分为-1，之后数大的部分被分为+1；所以只能从右上开始画。、</span><br><span class="line">    # 这样，显然开始画图部分是从不预测值不是+1开始的</span><br><span class="line">    # 但是看图时，是从左下开始，预测值更可能是1.0</span><br><span class="line">    # 表达能力有限啊!我自己都说不清楚。。</span><br><span class="line">    # 这个ROC开起来可能好像没用到训练情况，其实，这里的关键在于排序。这样，排序的前面所有都是-1，后面所有都是+1；。</span><br><span class="line">    # 但是为什么没有使用预测结果，因为最终都将是归为x=1,y=1.目的是让+1尽可能靠近前面，面积AUC更大，这就是ROC的意义！</span><br><span class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> sortedIndicies.tolist()[<span class="number">0</span>]:</span><br><span class="line">        if classLabels[index] == 1.0: # 这里的1.0是指预测为正，将实际值classLabels与此比较，如果相同，y值下降</span><br><span class="line">            delX = 0;delY = yStep;</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            delX = xStep;delY = 0;</span><br><span class="line">            ySum += cur[<span class="number">1</span>]</span><br><span class="line">        ax.plot([cur[<span class="number">0</span>],cur[<span class="number">0</span>]-delX],[cur[<span class="number">1</span>],cur[<span class="number">1</span>]-delY],c=<span class="string">'b'</span>)</span><br><span class="line">        cur = (cur[<span class="number">0</span>]-delX,cur[<span class="number">1</span>]-delY)</span><br><span class="line">    ax.plot([<span class="number">0</span>,<span class="number">1</span>],[<span class="number">0</span>,<span class="number">1</span>],<span class="string">'b--'</span>)</span><br><span class="line">    plt.xlabel('False positive Rate');</span><br><span class="line">    plt.ylabel('True positive Rate');</span><br><span class="line">    ax.axis([<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>])</span><br><span class="line">    plt.show()</span><br><span class="line">    print(<span class="string">"the Area Under the Curve is :"</span>,ySum*xStep)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试代码test.py</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">""</span><span class="string">" </span></span><br><span class="line"><span class="string">@author: zoutai</span></span><br><span class="line"><span class="string">@file: test.py </span></span><br><span class="line"><span class="string">@time: 2017/11/04 </span></span><br><span class="line"><span class="string">@description: </span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br><span class="line"></span><br><span class="line"># 这里记录一个python错误：当两个类出现互相调用时，可能会出现无法调用的情况，如adaboost和boost两个方法互相调用</span><br><span class="line"># 所以，测试运行代码尽量另外单独写，比如test</span><br><span class="line">from unit07<span class="selector-class">.adaboost</span> import *</span><br><span class="line"></span><br><span class="line"># # 测试1:基于加权的分类器</span><br><span class="line"># dataMat,lebalMat = loadSimpData()</span><br><span class="line"># # D是这里的核心：D是每一个样本的权重，通过D.T*errArr来得出错误率，除以m是为了归一化</span><br><span class="line"># # 在单层决策树中并没有迭代，但是才后面的提升过程中，主要就是D的不断迭代修改，来进行训练优化</span><br><span class="line"># D = mat(ones((5,1))/5)</span><br><span class="line"># bestStump,minError,bestClass = buildStump(dataMat,lebalMat,D)</span><br><span class="line"># print(bestStump)</span><br><span class="line"># print(minError)</span><br><span class="line"># print(bestClass)</span><br><span class="line"></span><br><span class="line"># # 测试2:基于adaboost的弱分类器，多个阈值，单层</span><br><span class="line"># dataMat,lebalMat = loadSimpData()</span><br><span class="line"># weakClassArray = adaboostTrainDS(dataMat,lebalMat,9)</span><br><span class="line"># print(weakClassArray)</span><br><span class="line"></span><br><span class="line"># # 测试3：测试一个数据集，看效果</span><br><span class="line"># dataMat,lebalMat = loadSimpData()</span><br><span class="line"># # 这里的30是迭代次数，也是分类器个数。其实3次时，errorRate==0,就够了，此时分类器就是3个</span><br><span class="line"># weakClassArray = adaboostTrainDS(dataMat,lebalMat,30)</span><br><span class="line"># predictResult = adaClassify([[0,0]],weakClassArray) # [[0,0]]这个地方书上写错了</span><br><span class="line"># print("the result is:",predictResult)</span><br><span class="line"></span><br><span class="line"># # 测试4-马疝病-预测得病的马是否能存活</span><br><span class="line"># dataMat,lebalMat = loadDataSet('horseColicTraining2.txt')</span><br><span class="line"># classArr = adaboostTrainDS(dataMat,lebalMat,10)</span><br><span class="line"># print(classArr)</span><br><span class="line"># testMat,testLabelMat = loadDataSet('horseColicTest2.txt')</span><br><span class="line"># predictArr10 = adaClassify(testMat,classArr)</span><br><span class="line"># num = len(testMat)</span><br><span class="line"># errorArr = mat(ones((num,1)))</span><br><span class="line"># errorRate = sum(errorArr[predictArr10 != mat(testLabelMat).T])/num</span><br><span class="line"># print(errorRate)</span><br><span class="line"># # 说明一点，这里的数据与第四章不同；另外我的测试结果和书上也不同</span><br><span class="line"># # 测试结果：</span><br><span class="line"># # 1   --   0.367892976589   --   0.283582089552</span><br><span class="line"># # 10  --   0.354515050167   --   0.328358208955</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 画ROC曲线</span><br><span class="line"># 疑问：这个地方实在是没弄懂，这个曲线有什么用？只是用了训练的排序，没有用训练的预测值。</span><br><span class="line">dataMat,lebalMat = loadDataSet(<span class="string">'horseColicTraining2.txt'</span>)</span><br><span class="line">classArr,sumClass = adaboostTrainDS(dataMat,lebalMat,<span class="number">10</span>)</span><br><span class="line"><span class="function"><span class="title">plotROC</span><span class="params">(sumClass.T,lebalMat)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>后续：</p>
+<ol>
+<li>非均衡分类器<blockquote>
+<p>–| 即训练出来的分类器并不是一定准确的，即便错误率很低，但是在某些情况下在这种错误是不能出现的。比如，垃圾邮件的分类，本来是好的邮件被当做垃圾邮件会造成邮件的丢失。<br>–| 一般而言，这种分类器是由于正例样本和反例样本数目相差很大造成的。</p>
+</blockquote>
+</li>
+</ol>
+<ul>
+<li>分类的其他度量指标：正确率、召回率、ROC曲线<ul>
+<li>1正确率：前面使用的就是正确率来度量，但是我们可以改进前面的度量方式。如采用混淆矩阵（书中后面讲到的代价函数)</li>
+<li>2召回率：预测为正的数据占所有实际为正例的比例。在召回率很大时，真正判错的正例不多</li>
+<li>3ROC曲线，当面积AUC越大，说明分类器越好，作为模型选择的一种方式<br><img src="./images/1509893412709.jpg" alt="混淆矩阵"></li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>处理分均衡问题的数据抽样方法<blockquote>
+<p>即对某一个类别的样本少的进行重复抽样–过抽样；对样本多的进行少抽样或删除–欠抽样</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>总结：集成分类器可能进一步突出单个分类器的不足，如过拟合问题；但是如果分类器之间的差别较大时，这个问题就会缓和一些。这种不同可以使算法不同，也可以是数据不同。</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="soundslow 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="soundslow 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/boost/" rel="tag"><i class="fa fa-tag"></i> boost</a>
+          
+            <a href="/tags/%E6%8F%90%E5%8D%87%E6%A0%91/" rel="tag"><i class="fa fa-tag"></i> 提升树</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-4%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF-python3/" rel="next" title="机器学习实战-4朴素贝叶斯-python3">
+                <i class="fa fa-chevron-left"></i> 机器学习实战-4朴素贝叶斯-python3
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-6%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="prev" title="机器学习实战-6支持向量机">
+                机器学习实战-6支持向量机 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+     <div id="gitalk-container"></div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/default_avatar.jpg"
+                alt="soundslow" />
+            
+              <p class="site-author-name" itemprop="name">soundslow</p>
+              <p class="site-description motion-element" itemprop="description">I take the newer medications, but I still see things that are not here.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive%20%20%20%20%20%20%20%20%20%20/%E5%BD%92%E6%A1%A3">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/purice93" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/soundslow" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://douban.com/people/purice" target="_blank" title="豆瓣">
+                      
+                        <i class="fa fa-fw fa-globe"></i>豆瓣</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://www.zhihu.com/people/zou-tai-89" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jm.taobao.org/" title="阿里中间件" target="_blank">阿里中间件</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://tech.meituan.com/" title="美团点评" target="_blank">美团点评</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.ibm.com/developerworks/cn/java/" title="IBM" target="_blank">IBM</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2013 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">soundslow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+<div><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数 <span id="busuanzi_value_site_uv"></span> 人
+</span>
+</div>
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共71.1k字</span>
+</div>
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'a7cb53e868f43c47336f',
+          clientSecret: '9cd4ba9a4483e96ba688919a15a9bc97a3ab535d',
+          repo: 'gitalk',
+          owner: 'purice93',
+          admin: ['purice93'],
+          id:'gitalk_20171105230257',
+          labels: 'gitalk'.split(',').filter(l => l),
+          perPage: 10,
+          pagerDirection: 'last',
+          createIssueManually: true,
+          distractionFreeMode: false
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

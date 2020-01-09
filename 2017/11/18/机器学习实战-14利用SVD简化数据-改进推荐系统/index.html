@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("http://purice93.github.io"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="降维,机器学习,SVD," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="随风而行" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="虽然本章标题是SVD，但是感觉本章的内容核心却有点像是推荐系统，SVD的主要作用优化数据，简化运算。对于推荐系统，生活中处处都是，比如火热的网易云音乐，其中就是用到的因子推荐算法，记得我的第一篇博客就是从知乎上转载下来的；另外还有今日头条；其他的应用其实也有，但是自我感觉，这两个应用应该是最好的。记得最近俱乐部有一个网络订餐推荐系统的项目，而这正是书中所举的例子，作为一个推荐系统，其实饮食推荐系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习实战-14利用SVD简化数据-改进推荐系统">
+<meta property="og:url" content="https://purice93.github.io/2017/11/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-14%E5%88%A9%E7%94%A8SVD%E7%AE%80%E5%8C%96%E6%95%B0%E6%8D%AE-%E6%94%B9%E8%BF%9B%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="随风而行">
+<meta property="og:description" content="虽然本章标题是SVD，但是感觉本章的内容核心却有点像是推荐系统，SVD的主要作用优化数据，简化运算。对于推荐系统，生活中处处都是，比如火热的网易云音乐，其中就是用到的因子推荐算法，记得我的第一篇博客就是从知乎上转载下来的；另外还有今日头条；其他的应用其实也有，但是自我感觉，这两个应用应该是最好的。记得最近俱乐部有一个网络订餐推荐系统的项目，而这正是书中所举的例子，作为一个推荐系统，其实饮食推荐系">
+<meta property="og:image" content="https://purice93.github.io/2017/11/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-14%E5%88%A9%E7%94%A8SVD%E7%AE%80%E5%8C%96%E6%95%B0%E6%8D%AE-%E6%94%B9%E8%BF%9B%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/images/1510971623115.jpg">
+<meta property="og:image" content="https://purice93.github.io/2017/11/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-14%E5%88%A9%E7%94%A8SVD%E7%AE%80%E5%8C%96%E6%95%B0%E6%8D%AE-%E6%94%B9%E8%BF%9B%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/images/1510971651851.jpg">
+<meta property="og:image" content="https://purice93.github.io/2017/11/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-14%E5%88%A9%E7%94%A8SVD%E7%AE%80%E5%8C%96%E6%95%B0%E6%8D%AE-%E6%94%B9%E8%BF%9B%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/images/1510972417221.jpg">
+<meta property="og:image" content="https://purice93.github.io/2017/11/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-14%E5%88%A9%E7%94%A8SVD%E7%AE%80%E5%8C%96%E6%95%B0%E6%8D%AE-%E6%94%B9%E8%BF%9B%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/images/1510972602969.jpg">
+<meta property="og:image" content="https://purice93.github.io/2017/11/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-14%E5%88%A9%E7%94%A8SVD%E7%AE%80%E5%8C%96%E6%95%B0%E6%8D%AE-%E6%94%B9%E8%BF%9B%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/images/1510972613257.jpg">
+<meta property="og:image" content="https://purice93.github.io/2017/11/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-14%E5%88%A9%E7%94%A8SVD%E7%AE%80%E5%8C%96%E6%95%B0%E6%8D%AE-%E6%94%B9%E8%BF%9B%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/images/1510972618083.jpg">
+<meta property="og:image" content="https://purice93.github.io/2017/11/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-14%E5%88%A9%E7%94%A8SVD%E7%AE%80%E5%8C%96%E6%95%B0%E6%8D%AE-%E6%94%B9%E8%BF%9B%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/images/1510972646344.jpg">
+<meta property="article:published_time" content="2017-11-18T03:19:19.000Z">
+<meta property="article:modified_time" content="2020-01-09T07:44:01.060Z">
+<meta property="article:author" content="soundslow">
+<meta property="article:tag" content="降维">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="SVD">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://purice93.github.io/2017/11/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-14%E5%88%A9%E7%94%A8SVD%E7%AE%80%E5%8C%96%E6%95%B0%E6%8D%AE-%E6%94%B9%E8%BF%9B%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/images/1510971623115.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://purice93.github.io/2017/11/18/机器学习实战-14利用SVD简化数据-改进推荐系统/"/>
+
+
+
+
+
+  <title>机器学习实战-14利用SVD简化数据-改进推荐系统 | 随风而行</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">随风而行</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">soundslow</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive          //归档"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th           //分类"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags                     //标签"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user                   //关于"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-游戏">
+          <a href="/games/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gamepad                  //游戏"></i> <br />
+            
+            游戏
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://purice93.github.io/2017/11/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-14%E5%88%A9%E7%94%A8SVD%E7%AE%80%E5%8C%96%E6%95%B0%E6%8D%AE-%E6%94%B9%E8%BF%9B%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="soundslow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="随风而行">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">机器学习实战-14利用SVD简化数据-改进推荐系统</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-18T11:19:19+08:00">
+                2017-11-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ML-DL/" itemprop="url" rel="index">
+                    <span itemprop="name">ML/DL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span id="busuanzi_value_page_pv"></span>次阅读
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>虽然本章标题是SVD，但是感觉本章的内容核心却有点像是推荐系统，SVD的主要作用优化数据，简化运算。对于推荐系统，生活中处处都是，比如火热的网易云音乐，其中就是用到的因子推荐算法，记得我的第一篇博客就是从知乎上转载下来的；另外还有今日头条；其他的应用其实也有，但是自我感觉，这两个应用应该是最好的。记得最近俱乐部有一个网络订餐推荐系统的项目，而这正是书中所举的例子，作为一个推荐系统，其实饮食推荐系统和音乐推荐有很多类似或者可能完全相同处理。它的基本逻辑就是找和你经常吃同样美食的用户A，然后给你推荐用户A吃过的，而你却没吃的。比如你和A，你们都喜欢吃川菜，但是A吃过夫妻肺片，并且对其评价很好，而你没吃过，这时候，推荐系统通过计算就很可能给你推荐夫妻肺片。</p>
+</blockquote>
+<blockquote>
+<p>由于吴军《数学之美》中对此解释非常好，所以这里转载：<br>“三个矩阵有非常清楚的物理含义。第一个矩阵X中的每一行表示意思相关的一类词，其中的每个非零元素表示这类词中每个词的重要性（或者说相关性），数值越大越相关。最后一个矩阵Y中的每一列表示同一主题一类文章，其中每个元素表示这类文章中每篇文章的相关性。中间的矩阵则表示类词和文章雷之间的相关性。因此，我们只要对关联矩阵A进行一次奇异值分解，w 我们就可以同时完成了近义词分类和文章的分类。（同时得到每类文章和每类词的相关性）。”</p>
+</blockquote>
+<hr>
+<p><strong>一、SVD的应用</strong></p>
+<blockquote>
+<p>优点：简化数据、去除噪声、提高算法效果<br>缺点：逻辑转换可能难以理解<br>使用类型：数值型数据</p>
+</blockquote>
+<ol>
+<li>隐性语义索引LSI（信息检索）<br>这里，我谈谈我的理解，可能不太准确。首先我们谈谈一般搜索的两个问题：</li>
+</ol>
+<ul>
+<li>关键词写错。比如我搜索“北晶”，我的本意是搜索“北京”，但是搜索引擎还是会给我推荐“北京”的结果。为什么？如果是简单的搜索，搜索引擎将查找所有与“北晶”相关的信息，而忽视“北京”。但是通过SVD，可以将“北京”“背景”“背静”等相似拼音的词语归为一个集合，这样，当搜索不存在是就会判断是否输入错误，已在集合里面查找相关的词语。</li>
+<li>同义词搜索。比如我们搜索“SVD”，尽管SVD和PCA可能存在许多的差别，但是在系统内部，由于使用SVD对所有的文章进行处理后发现，SVD和PCA经常一起出现在一篇文章中，因此将这两个次聚为一类，这时当我们搜索“SVD”时，其实，也会给我门提供PCA的信息。<br>上面就是SVD对搜索引擎的改进</li>
+</ul>
+<ol start="2">
+<li>推荐系统<br>在前言中，通过餐厅个性化订餐系统讲述了SVD的应用，其实，这是和信息检索一个道理，就是找到和你口味相同的所有用户，推荐他们吃过，而你没吃过的食物。</li>
+</ol>
+<hr>
+<p><strong>二、矩阵分解和推导</strong><br>SVD也是对矩阵进行分解，但是和特征分解不同，SVD并不要求要分解的矩阵为方阵。假设我们的矩阵A是一个m×n的矩阵，那么我们定义矩阵A的SVD为：<br><img src="./images/1510971623115.jpg" alt="enter description here"><br>　　　　其中U是一个m×m的矩阵，Σ是一个m×n的矩阵，除了主对角线上的元素以外全为0，主对角线上的每个元素都称为奇异值，V是一个n×n的矩阵。U和V都是酉矩阵，即满足UTU=I,VTV=I。下图可以很形象的看出上面SVD的定义：<br><img src="./images/1510971651851.jpg" alt="enter description here"></p>
+<p><strong>具体的数学逻辑推导参考：<a href="https://www.zhihu.com/question/22237507" target="_blank" rel="noopener">知乎</a></strong></p>
+<p><strong>三、SVD实际应用案例</strong><br>接下来是通过SVD来优化推荐系统，以及压缩图像<br>首先梳理几个点：</p>
+<ul>
+<li>1.原始推荐系统如何推荐：一般推家系统都是通过计算两个用户的相似度，来进行更推荐</li>
+<li>2.相似度的计算：（最后都要归一化到0-1）<ul>
+<li>欧式距离</li>
+<li>余弦相似度</li>
+<li>皮尔逊相关系数<br><img src="./images/1510972417221.jpg" alt="几个相似度计算公式"></li>
+</ul>
+</li>
+<li>3.改进推荐系统：原始的推荐系统需要大量的计算，通过使用SVD简化数据，能够大大加快运算的速度</li>
+<li>4.重构矩阵：即尽可能的保留原始矩阵的信息<ul>
+<li>我们可以发现得到的特征值，前3个比其他的值大很多，所以可以将最后2个值去掉，因为他们的影响很小。<br><img src="./images/1510972602969.jpg" alt="enter description here"><br><img src="./images/1510972613257.jpg" alt="enter description here"><br><img src="./images/1510972618083.jpg" alt="enter description here"></li>
+<li>上面例子就可以将原始数据用如下结果近似：<br><img src="./images/1510972646344.jpg" alt="enter description here"></li>
+</ul>
+</li>
+</ul>
+<p><strong>四、推荐系统和图像压缩案例1、2</strong></p>
+<ul>
+<li>代码svdRec.py</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">""</span><span class="string">" </span></span><br><span class="line"><span class="string">@author: zoutai</span></span><br><span class="line"><span class="string">@file: svdRec.py </span></span><br><span class="line"><span class="string">@time: 2017/11/17 </span></span><br><span class="line"><span class="string">@description: </span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br><span class="line">from numpy import *</span><br><span class="line">def loadExData():</span><br><span class="line">    return[[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>],</span><br><span class="line">           [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>],</span><br><span class="line">           [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>],]</span><br><span class="line"></span><br><span class="line">def loadExData2():</span><br><span class="line">    return[[<span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>],</span><br><span class="line">           [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">4</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>],</span><br><span class="line">           [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>],</span><br><span class="line">           [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">0</span>]]</span><br><span class="line"></span><br><span class="line">def loadExData3():</span><br><span class="line">    return[</span><br><span class="line">           [<span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>],</span><br><span class="line">           [<span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>],</span><br><span class="line">           [<span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>],</span><br><span class="line">           [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">           [<span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">0</span>]]</span><br><span class="line"></span><br><span class="line"># 三个相似度计算函数：欧氏距离、余弦函数、皮尔逊相关系数</span><br><span class="line"># 量度在0-1之间，0表示相似度最小，反之越大</span><br><span class="line">def eulidSim(inA,inB):</span><br><span class="line">    return <span class="number">1.0</span>/(<span class="number">1.0</span> + linalg.norm(inA,inB))</span><br><span class="line"></span><br><span class="line">def cosSim(inA,inB):</span><br><span class="line">    num = float(inA.T*inB) # 分子Numerator，分母denominator</span><br><span class="line">    denom = linalg.norm(inA)*linalg.norm(inB)</span><br><span class="line">    return <span class="number">0.5</span>+<span class="number">0.5</span>*(num/denom)</span><br><span class="line"></span><br><span class="line"># 这个内部逻辑不是很清楚</span><br><span class="line">def pearsSim(inA,inB):</span><br><span class="line">    <span class="keyword">if</span> len(inA) &lt; <span class="number">3</span>:</span><br><span class="line">        return  <span class="number">1.0</span></span><br><span class="line">    return 0.5 + 0.5 * corrcoef(inA,inB,rowvar=0)[0][9]</span><br><span class="line"></span><br><span class="line">#第一个推荐引擎，不使用SVD，单纯的相似度计算公式来衡量</span><br><span class="line"># standEst对没有进行评分的物品，进行评分的策略</span><br><span class="line">def standEst(dataMat,user,simMeas,item):</span><br><span class="line">    n = shape(dataMat)[<span class="number">1</span>]</span><br><span class="line">    simTotal = 0.0; rateSimTotal = 0.0</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">        userRating = dataMat[user,j]</span><br><span class="line">        <span class="keyword">if</span> userRating == <span class="number">0</span>:</span><br><span class="line">            continue</span><br><span class="line">        # 寻找对Item和j项商品都进行评分了的所有用户ID</span><br><span class="line">        overLap = nonzero(logical_and(dataMat[:,item]<span class="selector-class">.A</span> &gt; <span class="number">0</span>,dataMat[:,j]<span class="selector-class">.A</span> &gt; <span class="number">0</span>))[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> len(overLap) == <span class="number">0</span>:</span><br><span class="line">            similarity = <span class="number">0.0</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            similarity = simMeas(dataMat[overLap,item],dataMat[overLap,j])</span><br><span class="line">        simTotal += similarity</span><br><span class="line">        rateSimTotal += similarity * userRating</span><br><span class="line">    <span class="keyword">if</span> simTotal == <span class="number">0</span>:</span><br><span class="line">        return <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        return rateSimTotal/simTotal</span><br><span class="line"></span><br><span class="line"># estMethod=standEst：传递一个函数</span><br><span class="line">def recommend(dataMat,user,N=3,sigMeas=cosSim,estMethod=standEst):</span><br><span class="line">    unratedItems = nonzero(dataMat[user,:].A==0)[1] # 查找当前user的未评级商品id</span><br><span class="line">    <span class="keyword">if</span> len(unratedItems) == <span class="number">0</span>:</span><br><span class="line">        print(<span class="string">"you rate allItems"</span>)</span><br><span class="line">    itemScores = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> unratedItems:</span><br><span class="line">        iScore = estMethod(dataMat,user,sigMeas,item)</span><br><span class="line">        itemScores.append((item,iScore))</span><br><span class="line">    # 寻找前N项商品，逆序排序；</span><br><span class="line">    # 疑问：这个jj啥意思？我想应该是：</span><br><span class="line">    # jj[1]取的是分数，即按分数来进行排序，取分数最高的N项</span><br><span class="line">    return sorted(itemScores,key=lambda jj:jj[<span class="number">1</span>],reverse=True)[:N]</span><br><span class="line"></span><br><span class="line"># 基于SVD的评分估计-取代standEst</span><br><span class="line">def svdEst(dataMat,user,simMeas,item):</span><br><span class="line">    n = shape(dataMat)[<span class="number">1</span>]</span><br><span class="line">    simTotal = 0.0; rateSimTotal = 0.0</span><br><span class="line"></span><br><span class="line">    # 进行奇异值SVD分解</span><br><span class="line">    U,sigma,VT = linalg.svd(dataMat)</span><br><span class="line">    sigma4 = mat(eye(<span class="number">4</span>)*sigma[:<span class="number">4</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">        userRating = dataMat[user,j]</span><br><span class="line">        <span class="keyword">if</span> userRating == <span class="number">0</span> or j == item:</span><br><span class="line">            continue</span><br><span class="line">        # 寻找对Item和j项商品都进行评分了的所有用户ID</span><br><span class="line">        similarity = simMeas(dataMat[item,]<span class="selector-class">.T</span>,dataMat[j,].T)</span><br><span class="line">        simTotal += similarity</span><br><span class="line">        rateSimTotal += similarity * userRating</span><br><span class="line">    <span class="keyword">if</span> simTotal == <span class="number">0</span>:</span><br><span class="line">        return <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        return rateSimTotal/simTotal</span><br><span class="line"></span><br><span class="line">def printMat(inMat,thresh=0.8):</span><br><span class="line">    <span class="keyword">for</span> <span class="selector-tag">i</span> <span class="keyword">in</span> range(<span class="number">32</span>):</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(<span class="number">32</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="attribute">float</span>(inMat[i,k]) &gt; thresh:</span><br><span class="line">                print(<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                print(<span class="number">0</span>)</span><br><span class="line">        print(<span class="string">''</span>)</span><br><span class="line"></span><br><span class="line"># 其实就是一个分解在组合的过程</span><br><span class="line">def imgCompress(numSV=3,thresh=0.8):</span><br><span class="line">    myl = []</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> open(<span class="string">'0_5.txt'</span>).readlines():</span><br><span class="line">        newLine = []</span><br><span class="line">        <span class="keyword">for</span> <span class="selector-tag">i</span> <span class="keyword">in</span> range(<span class="number">32</span>):</span><br><span class="line">            newLine.append(int(line[i]))</span><br><span class="line">        myl.append(newLine)</span><br><span class="line">    myMat = mat(myl)</span><br><span class="line">    print(<span class="string">"原始矩阵："</span>)</span><br><span class="line">    print(myMat,thresh)</span><br><span class="line">    U,sigma,VT = linalg.svd(myMat)</span><br><span class="line">    SigRecon = mat(zeros((numSV,numSV)))</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> range(numSV):</span><br><span class="line">        SigRecon[k,k] = sigma[k]</span><br><span class="line">    reconMat = U[:,:numSV]*SigRecon*VT[:numSV,:]</span><br><span class="line">    print(<span class="string">"压缩后"</span>)</span><br><span class="line">    printMat(reconMat,thresh)</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>测试代码：test.py </li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">""</span><span class="string">" </span></span><br><span class="line"><span class="string">@author: zoutai</span></span><br><span class="line"><span class="string">@file: test.py </span></span><br><span class="line"><span class="string">@time: 2017/11/17 </span></span><br><span class="line"><span class="string">@description: </span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br><span class="line">from numpy import *</span><br><span class="line">from unit14<span class="selector-class">.svdRec</span> import *</span><br><span class="line">set_printoptions(suppress=True) # 设置numpy不以科学计数法输出，即e</span><br><span class="line"># tets1</span><br><span class="line">U,sigma,VT = linalg.svd([[<span class="number">1</span>,<span class="number">1</span>],[<span class="number">7</span>,<span class="number">7</span>]])</span><br><span class="line">#print(U,sigma,VT)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># test2</span><br><span class="line">U,sigma,VT = linalg.svd(loadExData())</span><br><span class="line"># 对角矩阵，但是写成一维数组的形式；[  9.64365076e+00   5.29150262e+00   7.40623935e-16   4.05103551e-16  2.21838243e-32]</span><br><span class="line">print(sigma) # 通过观察sigma发现，前三项远大于后面几项，所以取前三项就能代表所有项</span><br><span class="line"></span><br><span class="line"># 重构对角矩阵（前三项）</span><br><span class="line">sigma3 = mat([[sigma[<span class="number">0</span>],<span class="number">0</span>,<span class="number">0</span>],[<span class="number">0</span>,sigma[<span class="number">1</span>],<span class="number">0</span>],[<span class="number">0</span>,<span class="number">0</span>,sigma[<span class="number">2</span>]]])</span><br><span class="line"># 还原数据</span><br><span class="line">newDataMat = U[:,:3] * sigma3 * VT[:3,:]</span><br><span class="line"><span class="function"><span class="title">print</span><span class="params">(array(newDataMat)</span></span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># test3-餐厅菜肴推荐----result:[(2, 2.5), (1, 2.0243290220056256)]</span><br><span class="line"># 再次提醒自己：数据格式，mat，array等的区别，用法</span><br><span class="line">recommendItems = recommend(mat(loadExData3()),<span class="number">2</span>)</span><br><span class="line"><span class="function"><span class="title">print</span><span class="params">(<span class="string">"为第2个用户推荐菜单是："</span>,recommendItems)</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># test4-利用SVD提高优化效果----result:[(3, 3.2440521369249682), (10, 3.1576182912586654), (8, 3.1428571428571428)]</span><br><span class="line">recommendItems4 = recommend(mat(loadExData2()),<span class="number">2</span>,estMethod=svdEst)</span><br><span class="line"><span class="function"><span class="title">print</span><span class="params">(<span class="string">"为第2个用户推荐菜单是："</span>,recommendItems4)</span></span></span><br><span class="line"># 这个此时对不上号，可能存在错误</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 基于SVD的图像压缩</span><br><span class="line"><span class="function"><span class="title">imgCompress</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+
+<p><strong>最后、补充内容</strong></p>
+<ul>
+<li>推荐引擎的检验：检查检验、最小均方根误差</li>
+<li>推荐系统其他的改进<ul>
+<li>大规模数据，SVD会降低程序的速度，SVD可以在调入时运行一次。之后每天运行一次或者频率更低。不需要频繁运行。并且需要离线运行</li>
+<li>节约存储空间：通过观察，我们发现，上面的矩阵存在很多的0值，所以可以不保存这些值，节约内存和计算开销</li>
+<li>另外相似度得分不需要每次都计算：可以离线保存相似度得分。另外计算时，物品之间的相似度不同的用户是一样的可以复用</li>
+<li>冷启动（面试）：即对于一个新用户或者新的商品，如何推荐？没有相关数据<ul>
+<li>可以首次推荐当做搜索问题来处理，用户主动搜索才会出现</li>
+</ul>
+</li>
+<li>对于图像压缩：如果理解SVD的数学公式推导，就不难理解，其实，就是将像素在坐标轴上进行压缩。比如高中，我们学数学向量坐标时，经常做的作业就是平移压缩扩大，比函数y=f(x),横坐标缩小两倍就是：y=f(2x)</li>
+</ul>
+</li>
+</ul>
+<p><a href="https://zhuanlan.zhihu.com/p/30238979" target="_blank" rel="noopener">参考链接</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="soundslow 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="soundslow 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E9%99%8D%E7%BB%B4/" rel="tag"><i class="fa fa-tag"></i> 降维</a>
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/SVD/" rel="tag"><i class="fa fa-tag"></i> SVD</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/17/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-13%E5%88%A9%E7%94%A8PCA%E6%9D%A5%E7%AE%80%E5%8C%96%E6%95%B0%E6%8D%AE/" rel="next" title="机器学习实战-13利用PCA来简化数据">
+                <i class="fa fa-chevron-left"></i> 机器学习实战-13利用PCA来简化数据
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E6%88%98-10k-means%E8%81%9A%E7%B1%BB/" rel="prev" title="机器学习实战-10k-means聚类">
+                机器学习实战-10k-means聚类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+     <div id="gitalk-container"></div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/default_avatar.jpg"
+                alt="soundslow" />
+            
+              <p class="site-author-name" itemprop="name">soundslow</p>
+              <p class="site-description motion-element" itemprop="description">I take the newer medications, but I still see things that are not here.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive%20%20%20%20%20%20%20%20%20%20/%E5%BD%92%E6%A1%A3">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/purice93" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/soundslow" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://douban.com/people/purice" target="_blank" title="豆瓣">
+                      
+                        <i class="fa fa-fw fa-globe"></i>豆瓣</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://www.zhihu.com/people/zou-tai-89" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jm.taobao.org/" title="阿里中间件" target="_blank">阿里中间件</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://tech.meituan.com/" title="美团点评" target="_blank">美团点评</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.ibm.com/developerworks/cn/java/" title="IBM" target="_blank">IBM</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2013 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">soundslow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+<div><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数 <span id="busuanzi_value_site_uv"></span> 人
+</span>
+</div>
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共71.1k字</span>
+</div>
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'a7cb53e868f43c47336f',
+          clientSecret: '9cd4ba9a4483e96ba688919a15a9bc97a3ab535d',
+          repo: 'gitalk',
+          owner: 'purice93',
+          admin: ['purice93'],
+          id:'gitalk_20171118111919',
+          labels: 'gitalk'.split(',').filter(l => l),
+          perPage: 10,
+          pagerDirection: 'last',
+          createIssueManually: true,
+          distractionFreeMode: false
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
